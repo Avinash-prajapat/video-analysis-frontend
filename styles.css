@@ -21,6 +21,13 @@ body {
     box-sizing: border-box;
 }
 
+.note {
+    color: #d9534f;
+    font-weight: bold;
+    margin: 1px;
+    text-align: center;
+    font-size: 16px;
+}
 /* 🎥 Left side: Video panel (recording area) */
 .video-panel {
     background: white;
