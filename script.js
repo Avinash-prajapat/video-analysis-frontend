@@ -13,18 +13,49 @@ nextBtn.addEventListener('click', nextQuestion);
 submitBtn.addEventListener('click', uploadRecordedVideo);
 
 // ❓ Question list for interview/chat simulation
-const questions = [
-    "What is the difference between supervised, unsupervised, and reinforcement learning?",
-    "What is the bias-variance trade-off in machine learning?",
-    "What are overfitting and underfitting? How can they be prevented?",
-    "What is the purpose of cross-validation?",
-    "What are precision, recall, F1-score, and accuracy? When should each be used?",
-    "What is regularization? Explain L1 and L2 regularization.",
-    "What is the difference between bagging and boosting?",
-    "How do decision trees and random forests work?",
-    "What are the assumptions of linear regression?",
-    "What are the differences between generative and discriminative models?"
-];
+// const questions = [
+//     "What is the difference between supervised, unsupervised, and reinforcement learning?",
+//     "What is the bias-variance trade-off in machine learning?",
+//     "What are overfitting and underfitting? How can they be prevented?",
+//     "What is the purpose of cross-validation?",
+//     "What are precision, recall, F1-score, and accuracy? When should each be used?",
+//     "What is regularization? Explain L1 and L2 regularization.",
+//     "What is the difference between bagging and boosting?",
+//     "How do decision trees and random forests work?",
+//     "What are the assumptions of linear regression?",
+//     "What are the differences between generative and discriminative models?"
+// ];
+
+let questions = [];  // This will now be dynamically filled based on subject
+let selectedSubject = "";
+// // 🗂️ Function to get questions based on selected subject
+const questionBank = {
+    ml: [
+        "What is supervised learning?",
+        "What is overfitting?",
+        "Explain SVM briefly."
+    ],
+    ds: [
+        "What is a binary tree?",
+        "Explain stack vs queue.",
+        "What is a hash table?"
+    ],
+    oops: [
+        "What is inheritance?",
+        "Explain polymorphism.",
+        "What is encapsulation?"
+    ],
+    cn: [
+        "What is OSI model?",
+        "What is TCP vs UDP?",
+        "Explain IP addressing."
+    ],
+    dbms: [
+        "What is normalization?",
+        "What is ACID property?",
+        "What is indexing?"
+    ]
+};
 
 // 🔁 State variables to control app flow
 let mediaStream;         // Stores video+audio stream
@@ -119,6 +150,12 @@ function displayCurrentQuestion() {
 // 🎥 Start video + audio recording
 async function startRecording() {
     try {
+        selectedSubject = document.getElementById('subjectSelect').value;
+        if (!selectedSubject) {
+            alert("⚠️ Please select a subject before starting!");
+            return;
+        }
+        questions = questionBank[selectedSubject];
         // Ask permission for camera and microphone
         mediaStream = await navigator.mediaDevices.getUserMedia({ 
             video: true, 
