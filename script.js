@@ -186,7 +186,7 @@ function uploadRecordedVideo() {
     formData.append("video", blob, "interview_video.webm");
 
     // Send POST request to Flask backend
-    fetch("http://127.0.0.1:5000/upload", {
+    fetch("https://video-analysis-backend-2l85.onrender.com", {
         method: "POST",
         body: formData
     })
