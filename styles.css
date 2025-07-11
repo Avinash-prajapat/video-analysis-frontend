@@ -42,6 +42,9 @@ body {
     font-size: 2rem;
     position: relative;
 }
+.subject-container {
+  padding: 15px;
+}
 
 /* 🎞️ Actual video element styling */
 #userVideo {
