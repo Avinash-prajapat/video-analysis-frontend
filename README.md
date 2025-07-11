@@ -66,8 +66,11 @@ This app begins with a secure **Login Page** for authentication.
 ---
 
 ## 📸 Preview
+## Login Page
+![App Screenshot](loginpage.png)
 
-![App Screenshot](images/demo.gif) <!-- You can replace this with your actual screenshot or GIF -->
+## Main Page
+![App Screenshot](mainpage.png) <!-- You can replace this with your actual screenshot or GIF -->
 
 ---
 
