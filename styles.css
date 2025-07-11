@@ -1,0 +1,208 @@
+/* 🌐 Set up the base layout and font */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f0f2f5;
+    height: 100vh;   /* Full viewport height */
+    width: 100vw;    /* Full viewport width */
+    display: flex;   /* Center the container */
+    justify-content: center;
+    align-items: center;
+}
+
+/* 📦 Main app layout container */
+.app-container {
+    display: flex;       /* Side-by-side layout */
+    width: 95%;
+    height: 95%;
+    gap: 0px;            /* No gap between panels */
+    padding: 1px;
+    box-sizing: border-box;
+}
+
+/* 🎥 Left side: Video panel (recording area) */
+.video-panel {
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+/* 📺 Area inside video-panel for showing webcam */
+.video-container {
+    width: 95%;
+    background: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: black;
+    font-size: 2rem;
+    position: relative;
+}
+
+/* 🎞️ Actual video element styling */
+#userVideo {
+    width: 100%;
+    height: 85%;
+    object-fit: none;  /* Use 'cover' if you want cropping */
+}
+
+/* 🕹️ Buttons below the video */
+.controls {
+    height: 80px;
+    padding: 10px 20px;
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+    background: #f8f9fa;
+    border-top: 1px solid #ddd;
+}
+
+/* 🔘 Button styling */
+.controls button {
+    padding: 10px 30px;
+    border: none;
+    border-radius: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-size: 16px;
+    min-width: 100px;
+}
+
+/* ✅ Green start button */
+#startBtn {
+    background: #25D366;
+    color: white;
+}
+
+/* ❌ Red stop button (if added later) */
+#stopBtn {
+    background: #FF3B30;
+    color: white;
+}
+
+/* 📤 Submit button */
+#submitBtn {
+    background: #128C7E;
+    color: white;
+}
+
+/* 🚫 Disabled button look */
+.controls button:disabled {
+    background: #ddd;
+    color: #888;
+    cursor: not-allowed;
+}
+
+/* 💬 Right side: Chat panel (question + messages) */
+.chat-container {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    background: white;
+    border-radius: 5px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    overflow: hidden;
+}
+
+/* 📌 Chat top title bar */
+.chat-header {
+    padding: 15px;
+    background: #128C7E;
+    color: white;
+    font-weight: 600;
+    font-size: 18px;
+}
+
+/* 📜 Message history area */
+.chat-messages {
+    padding: 20px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    background: #e5ddd5;
+    flex-grow: 1;
+
+    /* WhatsApp-style background image */
+    background-image: url('https://web.whatsapp.com/img/bg-chat-tile-light_a4be512e7195b6b733d9110b408f075d.png');
+}
+
+/* 🖱️ Scrollbar styling */
+.chat-messages::-webkit-scrollbar {
+    width: 8px;
+}
+
+.chat-messages::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 10px;
+}
+
+.chat-messages::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 10px;
+}
+
+.chat-messages::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
+
+/* 💬 Message bubble base style */
+.message {
+    max-width: 70%;
+    padding: 8px 12px;
+    border-radius: 7.5px;
+    position: relative;
+    word-wrap: break-word;
+}
+
+/* 🙋‍♂️ User message style (left side) */
+.user {
+    background: #DCF8C6;
+    align-self: flex-start;
+    margin-right: 30%;
+}
+
+/* 🧠 System message style (right side) */
+.system {
+    background: white;
+    align-self: flex-end;
+    margin-left: 30%;
+}
+
+/* 💬 Typing indicator style (can be shown dynamically) */
+.typing-indicator {
+    display: none;
+    padding: 8px 12px;
+    background: white;
+    border-radius: 7.5px;
+    align-self: flex-end;
+    margin-left: 30%;
+    font-style: italic;
+    color: #666;
+}
+
+/* ❓ Bottom panel for showing the current question */
+.question-display {
+    padding: 15px;
+    background: #f0f2f5;
+    border-top: 1px solid #ddd;
+    font-weight: 600;
+    min-height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+
+/* ⏭️ Blue Next button style */
+#nextBtn {
+    background: #3498db;
+    color: white;
+}
+
+/* ✅ Remaining styles continue as usual */
