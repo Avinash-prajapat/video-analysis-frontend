@@ -114,6 +114,9 @@ body {
 
 /* 📌 Chat top title bar */
 .chat-header {
+    display: flex;               /* 🔑 This enables flexbox layout */
+    justify-content: center;     /* Horizontally center */
+    align-items: center;         /* Vertically center */
     padding: 15px;
     background: #128C7E;
     color: white;
