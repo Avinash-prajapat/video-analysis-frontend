@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<!-- HTML5 doctype declaration -->
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <!-- Ensures proper character rendering -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Makes layout responsive on mobile devices -->
+    
+    <title>Video Analysis Chat</title>
+    <!-- Title shown in browser tab -->
+
+    <link rel="stylesheet" href="styles.css">
+    <!-- Link to external CSS file for styling -->
+</head>
+<body>
+
+    <!-- Main container for the entire app layout -->
+    <div class="app-container">
+
+        <!-- 🎥 Left side: Video recording and controls -->
+        <div class="video-panel">
+
+            <!-- Area where user's video will be displayed -->
+            <div class="video-container">
+                
+                <video id="userVideo" autoplay muted></video>
+                <!-- 'autoplay' starts video automatically, 'muted' disables audio preview -->
+            </div>
+            <!-- Buttons for user control -->
+            <div class="controls">
+                <div class="subject-container">
+                    <label for="subjectSelector"><strong>Choose only one Subject:</strong></label>
+                <!-- 🔽 Subject dropdown -->
+                <select id="subjectSelect">
+                    <option value="">-- Select Subject --</option>
+                    <option value="ml">Machine Learning</option>
+                    <option value="ds">Data Structures</option>
+                    <option value="oops">OOPs</option>
+                    <option value="cn">Computer Networks</option>
+                    <option value="dbms">DBMS</option>
+                </select>
+                </div>
+
+                <button id="startBtn">Start</button>
+                <!-- Starts recording or video stream -->
+                <button id="nextBtn" disabled>Next</button>
+                <!-- Optional for multiple questions (disabled initially) -->
+                <button id="submitBtn">Submit</button>
+                <!-- Submits recorded video to backend -->
+            </div>
+            
+            <!-- Displays backend result (e.g., emotion analysis) -->
+            <div id="result"></div>
+        </div>
+
+        <!-- 💬 Right side: Chat-style interface -->
+        <div class="chat-container">
+            <div class="chat-header">AI Interview Assistant</div>
+            <!-- Title for chat interface -->
+
+            <div class="chat-messages" id="chatMessages">
+                <!-- Where chat-like messages will appear -->
+                <div class="note">
+                    🎧 Note: Please use headphones for best audio clarity during the interview.
+                </div>
+                <div class="message system">
+                     System is ready. Click Start to begin.
+                </div>
+
+            </div>
+
+            <!-- Current question display area -->
+            <div class="question-display" id="currentQuestion">
+                <!-- JS will dynamically update this with the current question -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Link to JavaScript that controls video + chat logic -->
+    <script src="script.js"></script>
+</body>
+</html>
