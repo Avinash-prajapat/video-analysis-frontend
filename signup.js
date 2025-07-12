@@ -6,7 +6,8 @@ document.getElementById('signupForm').addEventListener('submit', function(e) {
     const username = document.getElementById('username').value.trim();
     const password = document.getElementById('password').value;
 
-    fetch('https://video-analysis-backend-2l85.onrender.com', {
+    // ✅ Correct endpoint path added (/signup)
+    fetch('https://video-analysis-backend-2l85.onrender.com/signup', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ name, mobile, username, password })
