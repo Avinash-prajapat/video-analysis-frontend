@@ -210,19 +210,59 @@ function nextQuestion() {
     }
 }
 
-// 📤 Upload video to Flask backend for processing
+// // 📤 Upload video to Flask backend for processing
+// function uploadRecordedVideo() {
+//     if (recordedChunks.length === 0) {
+//         alert("⚠️ No recording available to upload!");
+//         return;
+//     }
+
+//     // Create a single video blob
+//     const blob = new Blob(recordedChunks, { type: 'video/webm' });
+//     const formData = new FormData();
+//     formData.append("video", blob, "interview_video.webm");
+
+//     // Send POST request to Flask backend
+//     fetch("https://video-analysis-backend-2l85.onrender.com/upload", {
+//         method: "POST",
+//         body: formData
+//     })
+//     .then(res => {
+//         if (!res.ok) throw new Error("❌ Server error");
+//         return res.json();
+//     })
+//     .then(data => {
+//         console.log("✅ Upload success:", data);
+//         document.getElementById("result").innerText =
+//             `\n✅Thank You!. Your Submission has been sent successfully!.\n`;
+//         // If needed: 📁 File ID: ${data.file_id};
+//     })
+//     .catch(err => {
+//         console.error("❌ Upload failed", err);
+//         document.getElementById("result").innerText =
+//             "\n❌ Submission failed. Please try again later.";
+//     });
+// }
+
 function uploadRecordedVideo() {
     if (recordedChunks.length === 0) {
         alert("⚠️ No recording available to upload!");
         return;
     }
 
-    // Create a single video blob
-    const blob = new Blob(recordedChunks, { type: 'video/webm' });
-    const formData = new FormData();
-    formData.append("video", blob, "interview_video.webm");
+    // 🔐 Step 1: Get username from localStorage
+    const username = localStorage.getItem("username") || "unknown";
 
-    // Send POST request to Flask backend
+    // 🎥 Step 2: Create video blob with username in filename
+    const blob = new Blob(recordedChunks, { type: 'video/webm' });
+    const finalFilename = `${username}_video.webm`;  // ✅ e.g., avinash_video.webm
+    const file = new File([blob], finalFilename, { type: 'video/webm' });
+
+    // 📤 Step 3: Prepare FormData
+    const formData = new FormData();
+    formData.append("video", file);
+
+    // 🛰️ Step 4: Send POST request
     fetch("https://video-analysis-backend-2l85.onrender.com/upload", {
         method: "POST",
         body: formData
@@ -234,8 +274,7 @@ function uploadRecordedVideo() {
     .then(data => {
         console.log("✅ Upload success:", data);
         document.getElementById("result").innerText =
-            `\n✅Thank You!. Your Submission has been sent successfully!.\n`;
-        // If needed: 📁 File ID: ${data.file_id};
+            `\n✅ Thank You! Your Submission has been sent successfully!\n`;
     })
     .catch(err => {
         console.error("❌ Upload failed", err);
@@ -243,6 +282,7 @@ function uploadRecordedVideo() {
             "\n❌ Submission failed. Please try again later.";
     });
 }
+
 
 // 🚀 Start speech recognition when script loads
 initSpeechRecognition();
