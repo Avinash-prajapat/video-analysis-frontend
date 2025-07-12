@@ -252,10 +252,11 @@ function uploadRecordedVideo() {
 
     // 🔐 Step 1: Get username from localStorage
     const username = localStorage.getItem("username") || "unknown";
+    const mobile = localStorage.getItem("mobile") || "0000000000";
 
     // 🎥 Step 2: Create video blob with username in filename
     const blob = new Blob(recordedChunks, { type: 'video/webm' });
-    const finalFilename = `${username}_video.webm`;  // ✅ e.g., avinash_video.webm
+    const finalFilename = `${username}_${mobile}_video.webm`;  // ✅  e.g., avinash_9876543210_video.webm
     const file = new File([blob], finalFilename, { type: 'video/webm' });
 
     // 📤 Step 3: Prepare FormData
