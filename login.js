@@ -25,7 +25,8 @@ function login() {
     .then(data => {
         if (data.success) {
             // ✅ Store login name in localStorage for later use
-            localStorage.setItem("username", username);  // for video upload
+            localStorage.setItem("username", username[2]);  // for video upload
+            localStorage.setItem("mobile", row[1]);        // row[1] = mobile
             localStorage.setItem("name", data.name);      // optional
             window.location.href = "dashboard.html";      // redirect
         } else {
