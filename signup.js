@@ -1,0 +1,32 @@
+document.getElementById('signupForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+
+    const name = document.getElementById('name').value.trim();
+    const mobile = document.getElementById('mobile').value.trim();
+    const username = document.getElementById('username').value.trim();
+    const password = document.getElementById('password').value;
+
+    fetch('http://127.0.0.1:5000/signup', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name, mobile, username, password })
+    })
+    .then(res => res.json())
+    .then(data => {
+        const msg = document.getElementById('message');
+        if (data.success) {
+            msg.style.color = 'green';
+            msg.innerText = data.message;
+            setTimeout(() => {
+                window.location.href = "login.html";
+            }, 1500);
+        } else {
+            msg.style.color = 'red';
+            msg.innerText = data.message;
+        }
+    })
+    .catch(err => {
+        console.error('Signup Error:', err);
+        document.getElementById('message').innerText = "⚠️ Something went wrong.";
+    });
+});
