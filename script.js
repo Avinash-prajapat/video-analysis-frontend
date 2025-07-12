@@ -251,8 +251,8 @@ function uploadRecordedVideo() {
     }
 
     // 🔐 Step 1: Get username from localStorage
-    const username = localStorage.getItem("username") || "unknown";
-    const mobile = localStorage.getItem("mobile") || "0000000000";
+    const username = localStorage.getItem("username");
+    const mobile = localStorage.getItem("mobile");
 
     // 🎥 Step 2: Create video blob with username in filename
     const blob = new Blob(recordedChunks, { type: 'video/webm' });
