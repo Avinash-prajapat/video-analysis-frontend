@@ -24,11 +24,12 @@ function login() {
     .then(res => res.json())
     .then(data => {
         if (data.success) {
-            // ✅ Store login name in localStorage for later use
-            localStorage.setItem("username", username[2]);  // for video upload
-            localStorage.setItem("mobile", row[1]);        // row[1] = mobile
-            localStorage.setItem("name", data.name);      // optional
-            window.location.href = "dashboard.html";      // redirect
+            // ✅ Store correct values
+            localStorage.setItem("username", data.username);  // store username
+            localStorage.setItem("mobile", data.mobile);      // store mobile from backend
+            localStorage.setItem("name", data.name);          // store name
+
+            window.location.href = "dashboard.html";
         } else {
             errorMsg.textContent = "❌ " + data.message;
         }
@@ -38,3 +39,4 @@ function login() {
         errorMsg.textContent = "⚠️ Server error. Try again.";
     });
 }
+
