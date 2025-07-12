@@ -18,7 +18,7 @@ document.getElementById('signupForm').addEventListener('submit', function(e) {
             msg.style.color = 'green';
             msg.innerText = data.message;
             setTimeout(() => {
-                window.location.href = "login.html";
+                window.location.href = "index.html";
             }, 1500);
         } else {
             msg.style.color = 'red';
