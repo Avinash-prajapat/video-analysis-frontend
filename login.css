@@ -33,14 +33,13 @@ body {
     outline: none;
     font-size: 16px;
     width: 90%;
-    margin: 10px auto; /* 🔴 Fix: Center inputs with auto margins */
-    /* 🔴 Fix: Add margin for spacing */
+    margin: 10px auto; /* 🔴 ADD: Inputs ko center align karne ke liye */
 }
 
 .login-container button {
-    width: 100%;          /* 🔴 Fix: Full width button */
-    display: block;       /* 🔴 Fix: Block element so it aligns properly */
-    margin-top: 10px;     /* 🔴 Add spacing from inputs */
+    width: 100%;          /* 🔴 ADD: Button ko full width diya */
+    display: block;       /* 🔴 ADD: Block banaya alignment ke liye */
+    margin-top: 10px;     /* 🔴 ADD: Input aur button ke beech gap */
     padding: 12px;
     background-color: #128C7E;
     color: white;
@@ -51,6 +50,11 @@ body {
     transition: 0.3s;
 }
 
+#loginBtn:disabled { /* 🔴 CHANGE: Button disable state CSS */
+    background-color: #999 !important;
+    cursor: not-allowed;
+    opacity: 0.8;
+}
 
 .login-container button:hover {
     background-color: #0b665a;
