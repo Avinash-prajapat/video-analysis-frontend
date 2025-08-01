@@ -1,17 +1,6 @@
-// function login() {
-//     const user = document.getElementById("username").value;
-//     const pass = document.getElementById("password").value;
-//     const errorMsg = document.getElementById("errorMsg");
+function login(event) {
+    event.preventDefault(); // 🔴 CHANGE: Stop default reload on Enter
 
-//     // ✅ Check credentials
-//     if (user.trim() !== "" && pass === "1234") {
-//         window.location.href = "dashboard.html"; // Go to main page
-//     } else {
-//         errorMsg.textContent = "❌ Invalid username or password!";
-//     }
-// }
-
-function login() {
     const username = document.getElementById("username").value.trim();
     const password = document.getElementById("password").value;
     const errorMsg = document.getElementById("errorMsg");
@@ -24,12 +13,11 @@ function login() {
     .then(res => res.json())
     .then(data => {
         if (data.success) {
-            // ✅ Store correct values
-            localStorage.setItem("username", data.username);  // store username
-            localStorage.setItem("mobile", data.mobile);      // store mobile from backend
-            localStorage.setItem("name", data.name);          // store name
+            localStorage.setItem("username", data.username);
+            localStorage.setItem("mobile", data.mobile);
+            localStorage.setItem("name", data.name);
 
-            window.location.href = "dashboard.html";
+            window.location.href = "dashboard.html"; // Redirect
         } else {
             errorMsg.textContent = "❌ " + data.message;
         }
@@ -40,3 +28,5 @@ function login() {
     });
 }
 
+// 🔴 CHANGE: Form submit listener triggers login (Enter or Click)
+document.getElementById("loginForm").addEventListener("submit", login);
