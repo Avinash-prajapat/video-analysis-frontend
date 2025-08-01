@@ -9,17 +9,17 @@
     <div class="login-container">
         <h2>🎥 Interview Portal Login</h2>
 
-        <!-- 🔴 CHANGE: Added form wrapper -->
-        <form id="loginForm">
+        <!-- 🔴 CHANGE: Added form wrapper with ID -->
+        <form id="loginForm"> <!-- ✅ Form ke submit hone par Enter press handle hoga -->
             <input type="text" id="username" placeholder="👤 Username" required />
             <input type="password" id="password" placeholder="🔒 Password" required />
-            <!-- 🔴 CHANGE: Button type set to submit -->
-            <button type="submit">Login</button>
+
+            <!-- 🔴 CHANGE: Corrected button ID (B capital) -->
+            <button id="loginBtn" type="submit">Login</button> <!-- ✅ Type submit hona chahiye -->
         </form>
 
         <p id="errorMsg"></p>
 
-        <!-- ✅ Signup link remains same -->
         <p class="signup-link">Don't have an account? <a href="signup.html">Sign up</a></p>
     </div>
 
