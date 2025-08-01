@@ -1,81 +1,172 @@
+/* 🌐 Base Layout (Full Page Centering) */
 body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     margin: 0;
     padding: 0;
-    background: linear-gradient(135deg, #00c9ff, #92fe9d);
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f0f2f5;
     height: 100vh;
+    width: 100vw;
     display: flex;
     justify-content: center;
     align-items: center;
+    overflow: hidden;
 }
 
-.login-container {
+/* 📦 Main Container (Video + Chat) */
+.app-container {
+    display: flex;
+    flex-direction: row;
+    width: 95%;
+    height: 95%;
+    gap: 10px;
+    box-sizing: border-box;
+}
+
+/* 🎥 Left: Video Panel */
+.video-panel {
+    flex: 1;
     background: white;
-    padding: 40px;
-    border-radius: 12px;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
     display: flex;
     flex-direction: column;
-    gap: 20px;
-    width: 300px;
+    overflow: hidden;
+    min-width: 50%;
+}
+
+/* 📺 Video Container (Webcam View) */
+.video-container {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: black;
+    position: relative;
+}
+
+#userVideo {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* ✅ Video auto-fit without distortion */
+}
+
+/* 🕹️ Sticky Controls (Buttons) */
+.controls {
+    position: sticky;
+    bottom: 0;
+    width: 100%;
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+    padding: 10px;
+    background: #f8f9fa;
+    border-top: 1px solid #ddd;
+    z-index: 10;
+}
+
+/* 🔘 Buttons Style */
+.controls button {
+    padding: 10px 25px;
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-size: 16px;
+    min-width: 100px;
+}
+
+/* ✅ Start Button (Green) */
+#startBtn { background: #25D366; color: white; }
+/* ❌ Stop Button (Red) */
+#stopBtn { background: #FF3B30; color: white; }
+/* 📤 Submit Button (Teal) */
+#submitBtn { background: #128C7E; color: white; }
+
+/* 🚫 Disabled Button Look */
+.controls button:disabled {
+    background: #ddd;
+    color: #888;
+    cursor: not-allowed;
+}
+
+/* 💬 Right: Chat Panel */
+.chat-container {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    overflow: hidden;
+}
+
+/* Chat Header */
+.chat-header {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 12px;
+    background: #128C7E;
+    color: white;
+    font-weight: 600;
+    font-size: 18px;
+}
+
+/* Messages Area */
+.chat-messages {
+    flex: 1;
+    padding: 15px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    background: #e5ddd5;
+    background-image: url('https://web.whatsapp.com/img/bg-chat-tile-light_a4be512e7195b6b733d9110b408f075d.png');
+}
+
+/* Scrollbar */
+.chat-messages::-webkit-scrollbar { width: 6px; }
+.chat-messages::-webkit-scrollbar-thumb { background: #888; border-radius: 5px; }
+.chat-messages::-webkit-scrollbar-thumb:hover { background: #555; }
+
+/* Chat Bubbles */
+.message { max-width: 70%; padding: 8px 12px; border-radius: 7.5px; word-wrap: break-word; }
+.user { background: #DCF8C6; align-self: flex-start; }
+.system { background: white; align-self: flex-end; }
+
+/* Question Area */
+.question-display {
+    padding: 12px;
+    background: #f0f2f5;
+    border-top: 1px solid #ddd;
+    font-weight: 600;
     text-align: center;
 }
 
-.login-container h2 {
-    margin: 0;
-    color: #333;
-}
-
-.login-container input {
-    padding: 12px;
-    border: 1px solid #ccc;
-    border-radius: 8px;
-    outline: none;
-    font-size: 16px;
-    width: 90%;
-    margin: 10px auto; /* 🔴 Fix: Center inputs with auto margins */
-    /* 🔴 Fix: Add margin for spacing */
-}
-
-.login-container button {
-    width: 100%;          /* 🔴 Fix: Full width button */
-    display: block;       /* 🔴 Fix: Block element so it aligns properly */
-    margin-top: 10px;     /* 🔴 Add spacing from inputs */
-    padding: 12px;
-    background-color: #128C7E;
-    color: white;
-    border: none;
-    border-radius: 8px;
-    font-size: 16px;
-    cursor: pointer;
-    transition: 0.3s;
-}
-#loginbtn:disabled {
-    background-color: #999 !important; /* Grey color */
-    cursor: not-allowed;
-    opacity: 0.8;
-}
-
-
-.login-container button:hover {
-    background-color: #0b665a;
-}
-
-#errorMsg {
-    color: red;
+/* 🔔 Note Text */
+.note {
+    color: #d9534f;
+    font-weight: bold;
+    text-align: center;
     font-size: 14px;
-}
-#loginbtn:disabled:hover {
-    background-color: #999 !important;
-}
-@media (max-width: 400px) {
-    .login-container {
-        width: 90%; /* Mobile screens pe auto fit */
-        padding: 20px;
-    }
+    margin: 8px;
 }
 
-.login-container input:focus {
-    border-color: #128C7E;
-    box-shadow: 0 0 5px rgba(18, 140, 126, 0.5);
+/* 📱 RESPONSIVE DESIGN */
+@media (max-width: 768px) {
+    .app-container {
+        flex-direction: column; /* ✅ Stack video & chat vertically on small screens */
+        height: 100vh;
+    }
+    .video-panel, .chat-container {
+        width: 100%;
+        height: 50%;
+    }
+    .controls {
+        position: fixed; /* ✅ Keep buttons visible */
+        bottom: 0;
+        left: 0;
+        right: 0;
+    }
 }
