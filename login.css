@@ -1,4 +1,3 @@
-/* 🌈 Background and Container */
 body {
     margin: 0;
     padding: 0;
@@ -10,47 +9,38 @@ body {
     align-items: center;
 }
 
-/* 🏠 Login Card */
 .login-container {
     background: white;
     padding: 40px;
     border-radius: 12px;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
     display: flex;
     flex-direction: column;
     gap: 20px;
-    width: 320px;
+    width: 300px;
     text-align: center;
 }
 
-/* 🏷 Title */
 .login-container h2 {
     margin: 0;
     color: #333;
-    font-size: 20px;
-    font-weight: bold;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
 }
 
-/* ✏ Input Fields */
 .login-container input {
     padding: 12px;
     border: 1px solid #ccc;
     border-radius: 8px;
     outline: none;
     font-size: 16px;
-    width: 100%;
-    box-sizing: border-box;
+    width: 90%;
+    margin: 10px auto; /* 🔴 Fix: Center inputs with auto margins */
+    /* 🔴 Fix: Add margin for spacing */
 }
 
-/* 🔘 Login Button (Fixed Alignment) */
 .login-container button {
-    width: 100%;                  /* ✅ Full width button */
-    display: block;               /* ✅ Ensure proper alignment */
-    margin-top: 5px;
+    width: 100%;          /* 🔴 Fix: Full width button */
+    display: block;       /* 🔴 Fix: Block element so it aligns properly */
+    margin-top: 10px;     /* 🔴 Add spacing from inputs */
     padding: 12px;
     background-color: #128C7E;
     color: white;
@@ -58,33 +48,15 @@ body {
     border-radius: 8px;
     font-size: 16px;
     cursor: pointer;
-    transition: background-color 0.3s ease;
+    transition: 0.3s;
 }
+
 
 .login-container button:hover {
     background-color: #0b665a;
 }
 
-/* ❌ Error Message */
 #errorMsg {
     color: red;
     font-size: 14px;
-    margin: 0;
-}
-
-/* 🔗 Signup Link */
-.signup-link {
-    font-size: 14px;
-    color: #333;
-}
-
-.signup-link a {
-    text-decoration: none;
-    color: #6c2dbf;
-    font-weight: bold;
-    transition: color 0.3s;
-}
-
-.signup-link a:hover {
-    color: #450f91;
 }
