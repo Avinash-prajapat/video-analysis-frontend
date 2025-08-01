@@ -7,23 +7,28 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
+    box-sizing: border-box;
+    padding: 20px; /* ✅ Mobile ke liye spacing */
 }
 
 .login-container {
     background: white;
-    padding: 40px;
+    padding: 30px;
     border-radius: 12px;
     box-shadow: 0 4px 15px rgba(0,0,0,0.2);
     display: flex;
     flex-direction: column;
     gap: 20px;
-    width: 300px;
+    width: 100%; /* ✅ Mobile ke liye full width */
+    max-width: 350px; /* ✅ Desktop ke liye limit */
     text-align: center;
+    box-sizing: border-box;
 }
 
 .login-container h2 {
     margin: 0;
     color: #333;
+    font-size: 22px;
 }
 
 .login-container input {
@@ -32,14 +37,14 @@ body {
     border-radius: 8px;
     outline: none;
     font-size: 16px;
-    width: 90%;
-    margin: 10px auto; /* 🔴 ADD: Inputs ko center align karne ke liye */
+    width: 100%; /* ✅ Full responsive width */
+    box-sizing: border-box;
 }
 
 .login-container button {
-    width: 100%;          /* 🔴 ADD: Button ko full width diya */
-    display: block;       /* 🔴 ADD: Block banaya alignment ke liye */
-    margin-top: 10px;     /* 🔴 ADD: Input aur button ke beech gap */
+    width: 100%; 
+    display: block;
+    margin-top: 10px;
     padding: 12px;
     background-color: #128C7E;
     color: white;
@@ -50,17 +55,46 @@ body {
     transition: 0.3s;
 }
 
-#loginBtn:disabled { /* 🔴 CHANGE: Button disable state CSS */
-    background-color: #999 !important;
+#loginbtn:disabled {
+    background-color: #999;
     cursor: not-allowed;
     opacity: 0.8;
 }
 
-.login-container button:hover {
+.login-container button:hover:not(:disabled) {
     background-color: #0b665a;
+}
+
+.signup-link {
+    font-size: 14px;
 }
 
 #errorMsg {
     color: red;
     font-size: 14px;
+}
+
+/* ✅ RESPONSIVE DESIGN */
+@media (max-width: 480px) { /* 🔴 Mobile view */
+    .login-container {
+        padding: 20px;
+        max-width: 100%;
+    }
+    .login-container h2 {
+        font-size: 20px;
+    }
+    .login-container input,
+    .login-container button {
+        font-size: 14px;
+        padding: 10px;
+    }
+    .signup-link {
+        font-size: 13px;
+    }
+}
+
+@media (min-width: 768px) { /* ✅ Tablet & Desktop */
+    .login-container {
+        max-width: 400px;
+    }
 }
