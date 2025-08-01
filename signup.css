@@ -4,8 +4,10 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100vh;
+  min-height: 100vh; /* ✅ Mobile ke liye bhi adjust hoga */
   margin: 0;
+  padding: 20px; /* ✅ Small devices me thoda gap */
+  box-sizing: border-box;
 }
 
 .signup-container {
@@ -13,38 +15,89 @@ body {
   padding: 30px;
   border-radius: 12px;
   box-shadow: 0 0 20px rgba(0,0,0,0.1);
-  width: 300px;
+  width: 100%; /* ✅ Mobile ke liye 100% width */
+  max-width: 350px; /* ✅ Desktop ke liye limit */
   text-align: center;
+  box-sizing: border-box;
 }
 
 .signup-container h2 {
   margin-bottom: 20px;
+  font-size: 22px;
 }
 
 .signup-container input {
   width: 100%;
-  padding: 10px;
+  padding: 12px;
   margin: 8px 0;
   border-radius: 8px;
   border: 1px solid #ccc;
+  font-size: 16px;
+  box-sizing: border-box;
+}
+
+/* 🔴 NEW: Password toggle eye icon */
+.password-wrapper {
+  position: relative;
+}
+.password-wrapper input {
+  width: 100%;
+}
+#togglePassword {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
+  font-size: 16px;
 }
 
 .signup-container button {
   width: 100%;
-  padding: 10px;
+  padding: 12px;
   background-color: #128C7E;
   color: white;
   border: none;
   border-radius: 8px;
   font-weight: bold;
   cursor: pointer;
+  font-size: 16px;
+  transition: 0.3s;
 }
 
-.signup-container button:hover {
+.signup-container button:disabled {
+  background-color: #999;
+  cursor: not-allowed;
+}
+
+.signup-container button:hover:not(:disabled) {
   background-color: #0f6b61;
 }
 
 #message {
   margin-top: 10px;
   font-weight: bold;
+  font-size: 14px;
+}
+
+/* ✅ RESPONSIVE DESIGN */
+@media (max-width: 480px) {  /* 🔴 Mobile view */
+  .signup-container {
+    padding: 20px;
+    max-width: 100%;
+  }
+  .signup-container h2 {
+    font-size: 20px;
+  }
+  .signup-container input, 
+  .signup-container button {
+    font-size: 14px;
+    padding: 10px;
+  }
+}
+
+@media (min-width: 768px) { /* ✅ Tablet and desktop */
+  .signup-container {
+    max-width: 400px;
+  }
 }
