@@ -210,19 +210,27 @@ function nextQuestion() {
     }
 }
 
-// // 📤 Upload video to Flask backend for processing
+// 📤 Upload video to Flask backend for processing
 // function uploadRecordedVideo() {
 //     if (recordedChunks.length === 0) {
 //         alert("⚠️ No recording available to upload!");
 //         return;
 //     }
 
-//     // Create a single video blob
-//     const blob = new Blob(recordedChunks, { type: 'video/webm' });
-//     const formData = new FormData();
-//     formData.append("video", blob, "interview_video.webm");
+//     // 🔐 Step 1: Get username from localStorage
+//     const username = localStorage.getItem("username");
+//     const mobile = localStorage.getItem("mobile");
 
-//     // Send POST request to Flask backend
+//     // 🎥 Step 2: Create video blob with username in filename
+//     const blob = new Blob(recordedChunks, { type: 'video/webm' });
+//     const finalFilename = `${username}_${mobile}_video.webm`;  // ✅  e.g., avinash_9876543210_video.webm
+//     const file = new File([blob], finalFilename, { type: 'video/webm' });
+
+//     // 📤 Step 3: Prepare FormData
+//     const formData = new FormData();
+//     formData.append("video", file);
+
+//     // 🛰️ Step 4: Send POST request
 //     fetch("https://video-analysis-backend-2l85.onrender.com/upload", {
 //         method: "POST",
 //         body: formData
@@ -234,8 +242,7 @@ function nextQuestion() {
 //     .then(data => {
 //         console.log("✅ Upload success:", data);
 //         document.getElementById("result").innerText =
-//             `\n✅Thank You!. Your Submission has been sent successfully!.\n`;
-//         // If needed: 📁 File ID: ${data.file_id};
+//             `\n✅ Thank You! Your Submission has been sent successfully!\n`;
 //     })
 //     .catch(err => {
 //         console.error("❌ Upload failed", err);
@@ -250,13 +257,17 @@ function uploadRecordedVideo() {
         return;
     }
 
+    // Disable submit button immediately
+    submitBtn.disabled = true;
+    submitBtn.textContent = "Submitting...";
+
     // 🔐 Step 1: Get username from localStorage
     const username = localStorage.getItem("username");
     const mobile = localStorage.getItem("mobile");
 
     // 🎥 Step 2: Create video blob with username in filename
     const blob = new Blob(recordedChunks, { type: 'video/webm' });
-    const finalFilename = `${username}_${mobile}_video.webm`;  // ✅  e.g., avinash_9876543210_video.webm
+    const finalFilename = `${username}_${mobile}_video.webm`;  // e.g., avinash_9876543210_video.webm
     const file = new File([blob], finalFilename, { type: 'video/webm' });
 
     // 📤 Step 3: Prepare FormData
@@ -275,15 +286,26 @@ function uploadRecordedVideo() {
     .then(data => {
         console.log("✅ Upload success:", data);
         document.getElementById("result").innerText =
-            `\n✅ Thank You! Your Submission has been sent successfully!\n`;
+            `✅ Thank You! Your Submission has been sent successfully!`;
+
+        // Disable buttons after successful submission
+        startBtn.disabled = true;
+        nextBtn.disabled = true;
+        submitBtn.disabled = true;
+        submitBtn.textContent = "Submitted ✅";
     })
     .catch(err => {
         console.error("❌ Upload failed", err);
         document.getElementById("result").innerText =
-            "\n❌ Submission failed. Please try again later.";
+            "❌ Submission failed. Please try again later.";
+
+        // Re-enable submit button on failure
+        submitBtn.disabled = false;
+        submitBtn.textContent = "Submit";
     });
 }
 
 
 // 🚀 Start speech recognition when script loads
 initSpeechRecognition();
+
