@@ -170,3 +170,16 @@ body {
         right: 0;
     }
 }
+#result {
+    height: 40px; /* ✅ Fixed height to prevent layout shift */
+    text-align: center;
+    font-weight: bold;
+    color: green;
+    padding: 5px;
+    background: #f8f9fa;
+    border-top: 1px solid #ddd;
+    overflow: hidden; /* ✅ Extra text hidden */
+    text-overflow: ellipsis; /* ✅ Show "..." if long */
+    white-space: nowrap; /* ✅ Keep text in one line */
+}
+
