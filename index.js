@@ -32,7 +32,7 @@ function login(event) {
             localStorage.setItem("mobile", data.mobile);
             localStorage.setItem("name", data.name);
 
-            window.location.href = "dashboard.html"; 
+            window.location.href = "instruction.html"; 
         } else {
             errorMsg.textContent = "❌ " + data.message;
             enableLoginButton(loginBtn);  // 🔴 ADD: Re-enable button on failure
@@ -55,3 +55,4 @@ function enableLoginButton(loginBtn) {
 
 // 🔴 ADD: Form submit event listener for Enter key + click
 document.getElementById("loginForm").addEventListener("submit", login);
+
