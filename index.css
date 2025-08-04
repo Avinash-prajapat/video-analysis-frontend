@@ -16,7 +16,6 @@ body {
     box-shadow: 0 4px 15px rgba(0,0,0,0.2);
     display: flex;
     flex-direction: column;
-    gap: 20px;
     width: 300px;
     text-align: center;
 }
@@ -79,3 +78,4 @@ body {
     border-color: #128C7E;
     box-shadow: 0 0 5px rgba(18, 140, 126, 0.5);
 }
+
