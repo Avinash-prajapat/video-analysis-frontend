@@ -337,22 +337,14 @@ function uploadRecordedVideo() {
         document.getElementById("result").innerText =
             `✅ Thank You! Your Submission has been sent successfully!`;
 
-        // ✅ Trigger analyze-drive after upload
-        return fetch("http://localhost:5000/analyze-drive", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({ message: "Drive upload complete, start analysis" })
+        // ✅ Silently trigger analyze-drive link without opening it
+        fetch("http://localhost:5000/analyze-drive", {
+            method: "GET",
+            mode: "no-cors"
         });
-    })
-    .then(res => {
-        if (!res.ok) throw new Error("❌ Analyze-drive API failed");
-        return res.json();
-    })
-    .then(response => {
-        console.log("✅ Analyze-drive response:", response);
-        document.getElementById("result").innerText += "\n📊 Analysis triggered!";
+
+        // (Optional) You can show a success message
+        document.getElementById("result").innerText += "\n📡 Analysis link triggered!";
     })
     .catch(err => {
         console.error("❌ Error:", err);
@@ -364,7 +356,9 @@ function uploadRecordedVideo() {
 }
 
 
+
 // 🚀 Start speech recognition when script loads
 initSpeechRecognition();
+
 
 
