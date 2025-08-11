@@ -210,46 +210,6 @@ function nextQuestion() {
     }
 }
 
-// 📤 Upload video to Flask backend for processing
-// function uploadRecordedVideo() {
-//     if (recordedChunks.length === 0) {
-//         alert("⚠️ No recording available to upload!");
-//         return;
-//     }
-
-//     // 🔐 Step 1: Get username from localStorage
-//     const username = localStorage.getItem("username");
-//     const mobile = localStorage.getItem("mobile");
-
-//     // 🎥 Step 2: Create video blob with username in filename
-//     const blob = new Blob(recordedChunks, { type: 'video/webm' });
-//     const finalFilename = `${username}_${mobile}_video.webm`;  // ✅  e.g., avinash_9876543210_video.webm
-//     const file = new File([blob], finalFilename, { type: 'video/webm' });
-
-//     // 📤 Step 3: Prepare FormData
-//     const formData = new FormData();
-//     formData.append("video", file);
-
-//     // 🛰️ Step 4: Send POST request
-//     fetch("https://video-analysis-backend-2l85.onrender.com/upload", {
-//         method: "POST",
-//         body: formData
-//     })
-//     .then(res => {
-//         if (!res.ok) throw new Error("❌ Server error");
-//         return res.json();
-//     })
-//     .then(data => {
-//         console.log("✅ Upload success:", data);
-//         document.getElementById("result").innerText =
-//             `\n✅ Thank You! Your Submission has been sent successfully!\n`;
-//     })
-//     .catch(err => {
-//         console.error("❌ Upload failed", err);
-//         document.getElementById("result").innerText =
-//             "\n❌ Submission failed. Please try again later.";
-//     });
-// }
 
 // function uploadRecordedVideo() {
 //     if (recordedChunks.length === 0) {
@@ -257,24 +217,19 @@ function nextQuestion() {
 //         return;
 //     }
 
-//     // Disable submit button immediately
 //     submitBtn.disabled = true;
 //     submitBtn.textContent = "Submitting...";
 
-//     // 🔐 Step 1: Get username from localStorage
 //     const username = localStorage.getItem("username");
 //     const mobile = localStorage.getItem("mobile");
 
-//     // 🎥 Step 2: Create video blob with username in filename
 //     const blob = new Blob(recordedChunks, { type: 'video/webm' });
-//     const finalFilename = `${username}_${mobile}_video.webm`;  // e.g., avinash_9876543210_video.webm
+//     const finalFilename = `${username}_${mobile}_video.webm`;
 //     const file = new File([blob], finalFilename, { type: 'video/webm' });
 
-//     // 📤 Step 3: Prepare FormData
 //     const formData = new FormData();
 //     formData.append("video", file);
 
-//     // 🛰️ Step 4: Send POST request
 //     fetch("https://video-analysis-backend-2l85.onrender.com/upload", {
 //         method: "POST",
 //         body: formData
@@ -288,22 +243,25 @@ function nextQuestion() {
 //         document.getElementById("result").innerText =
 //             `✅ Thank You! Your Submission has been sent successfully!`;
 
-//         // Disable buttons after successful submission
-//         startBtn.disabled = true;
-//         nextBtn.disabled = true;
-//         submitBtn.disabled = true;
-//         submitBtn.textContent = "Submitted ✅";
+//         // ✅ Silently trigger analyze-drive link without opening it
+//         fetch("http://localhost:5000/analyze-drive", {
+//             method: "GET",
+//             mode: "no-cors"
+//         });
+
+//         // (Optional) You can show a success message
+//         document.getElementById("result").innerText += "\n📡 Analysis link triggered!";
 //     })
 //     .catch(err => {
-//         console.error("❌ Upload failed", err);
-//         document.getElementById("result").innerText =
-//             "❌ Submission failed. Please try again later.";
-
-//         // Re-enable submit button on failure
+//         console.error("❌ Error:", err);
+//         document.getElementById("result").innerText +=
+//             "\n⚠️ Something went wrong. Please try again.";
 //         submitBtn.disabled = false;
 //         submitBtn.textContent = "Submit";
 //     });
 // }
+
+
 
 function uploadRecordedVideo() {
     if (recordedChunks.length === 0) {
@@ -334,17 +292,12 @@ function uploadRecordedVideo() {
     })
     .then(data => {
         console.log("✅ Upload success:", data);
-        document.getElementById("result").innerText =
-            `✅ Thank You! Your Submission has been sent successfully!`;
 
-        // ✅ Silently trigger analyze-drive link without opening it
-        fetch("http://localhost:5000/analyze-drive", {
-            method: "GET",
-            mode: "no-cors"
-        });
+        // Result ko localStorage me store karo
+        localStorage.setItem('uploadResult', JSON.stringify(data));
 
-        // (Optional) You can show a success message
-        document.getElementById("result").innerText += "\n📡 Analysis link triggered!";
+        // Redirect karo result page pe
+        window.location.href = "result.html";
     })
     .catch(err => {
         console.error("❌ Error:", err);
@@ -359,6 +312,7 @@ function uploadRecordedVideo() {
 
 // 🚀 Start speech recognition when script loads
 initSpeechRecognition();
+
 
 
 
