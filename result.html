@@ -1,18 +1,100 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Submission Result</title>
-    <link rel="stylesheet" href="result.css" />
+  <meta charset="UTF-8" />
+  <title>Submission Result</title>
+  <style>
+    /* Background gradient and full screen center */
+    body {
+      margin: 0;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #00c9ff, #92fe9d);
+      color: #333;
+    }
+
+    /* Container box */
+    .result-container {
+      background: white;
+      padding: 40px 50px;
+      border-radius: 12px;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+      max-width: 450px;
+      text-align: center;
+    }
+
+    h1 {
+      margin-bottom: 30px;
+      color: #128C7E;
+      font-weight: 700;
+      font-size: 28px;
+    }
+
+    #resultMessage {
+      font-size: 20px;
+      color: #1a5e4d;
+      margin-bottom: 35px;
+      white-space: pre-wrap;
+      font-weight: 600;
+    }
+
+    button {
+      background-color: #128C7E;
+      border: none;
+      padding: 14px 40px;
+      color: white;
+      font-size: 18px;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+      font-weight: 600;
+    }
+
+    button:hover {
+      background-color: #0b665a;
+    }
+
+    /* Responsive for smaller screens */
+    @media (max-width: 500px) {
+      .result-container {
+        width: 90%;
+        padding: 30px 20px;
+      }
+
+      #resultMessage {
+        font-size: 18px;
+      }
+
+      button {
+        width: 100%;
+        padding: 14px 0;
+      }
+    }
+  </style>
 </head>
 <body>
-    <div class="result-container">
-        <h2>Submission Status</h2>
-        <pre id="resultMessage">Loading...</pre>
-        <button id="backBtn">Back to Dashboard</button>
-    </div>
+  <div class="result-container">
+    <h1>Submission Result</h1>
+    <div id="resultMessage">Loading...</div>
+    <button onclick="goBack()">Back to Dashboard</button>
+  </div>
 
-    <script src="result.js"></script>
+  <script>
+    const message = localStorage.getItem('uploadResultMessage');
+    const resultDiv = document.getElementById('resultMessage');
+
+    if (message) {
+      resultDiv.textContent = message;
+    } else {
+      resultDiv.textContent = "No submission status available.";
+    }
+
+    function goBack() {
+      window.location.href = "dashboard.html";
+    }
+  </script>
 </body>
 </html>
