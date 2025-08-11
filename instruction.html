@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+ishme add kar do ki refresh mat karna or back "<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -22,24 +22,6 @@
         <button id="agreeBtn" disabled>I Agree</button>
     </div>
 
-    <script>
-        // ✅ Disable refresh (F5, Ctrl+R) and back button
-        window.addEventListener("keydown", function(e) {
-            if ((e.key === "F5") || 
-                (e.ctrlKey && e.key.toLowerCase() === "r")) {
-                e.preventDefault();
-                alert("🚫 Refresh is disabled during the interview!");
-            }
-        });
-
-        // ✅ Prevent back button
-        history.pushState(null, null, location.href);
-        window.onpopstate = function () {
-            history.go(1);
-            alert("🚫 Back navigation is disabled during the interview!");
-        };
-    </script>
-
     <script src="instruction.js"></script> <!-- External JS -->
 </body>
-</html>
+</html>"
