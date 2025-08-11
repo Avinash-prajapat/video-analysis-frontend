@@ -24,22 +24,22 @@
 <body>
     <h1>Submission Result</h1>
     <div id="resultMessage">Loading...</div>
-    <button onclick="goBack()">Back to Dashboard</button>
+    
 
     <script>
-        // Fetch message from localStorage
-        const message = localStorage.getItem('uploadResultMessage');
-        const resultDiv = document.getElementById('resultMessage');
-        if (message) {
-            resultDiv.textContent = message;
-        } else {
-            resultDiv.textContent = "No submission status available.";
-        }
+        // Page load hone par check karo aur redirect karo agar message nahi hai
+        window.onload = function() {
+            const message = localStorage.getItem('uploadResultMessage');
+            if (!message) {
+                // Agar message nahi mila toh login page par bhej do
+                window.location.href = "index.html";
+            } else {
+                // Agar message mil gaya toh dikhado
+                document.getElementById('resultMessage').textContent = message;
+            }
+        };
 
-        // Go back function
-        function goBack() {
-            window.location.href = "dashboard.html";
-        }
+      
     </script>
 </body>
 </html>
