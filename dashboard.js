@@ -317,9 +317,9 @@ function uploadRecordedVideo() {
     const username = localStorage.getItem("username");
     const mobile = localStorage.getItem("mobile");
 
-    const blob = new Blob(recordedChunks, { type: 'video/webm' });
-    const finalFilename = `${username}_${mobile}_video.webm`;
-    const file = new File([blob], finalFilename, { type: 'video/webm' });
+    // const blob = new Blob(recordedChunks, { type: 'video/webm' });
+    // const finalFilename = `${username}_${mobile}_video.webm`;
+    // const file = new File([blob], finalFilename, { type: 'video/webm' });
 
     const formData = new FormData();
     formData.append("video", file);
@@ -359,6 +359,7 @@ function uploadRecordedVideo() {
 
 // 🚀 Start speech recognition when script loads
 initSpeechRecognition();
+
 
 
 
