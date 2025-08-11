@@ -1,3 +1,4 @@
+/* === Global Styles === */
 body {
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   background: linear-gradient(to right, #4facfe, #00f2fe);
@@ -8,6 +9,7 @@ body {
   margin: 0;
 }
 
+/* === Signup Container === */
 .signup-container {
   background-color: white;
   padding: 30px;
@@ -22,14 +24,17 @@ body {
   color: #333;
 }
 
+/* === Input Fields === */
 .signup-container input {
   width: 100%;
-  padding: 10px;
+  height: 40px;
+  padding: 0 10px;
   margin: 8px 0;
   border-radius: 8px;
   border: 1px solid #ccc;
-  font-size: 16px;
   outline: none;
+  font-size: 14px;
+  box-sizing: border-box;
   transition: 0.3s;
 }
 
@@ -38,25 +43,28 @@ body {
   box-shadow: 0 0 5px rgba(18, 140, 126, 0.5);
 }
 
+/* === Password Wrapper === */
 .password-wrapper {
   position: relative;
-  display: flex;
+  width: 100%;
 }
 
 .password-wrapper input {
-  flex: 1;
+  padding-right: 40px; /* Eye icon space */
 }
 
 #togglePassword {
   position: absolute;
   right: 10px;
-  top: 30%;
+  top: 50%;
+  transform: translateY(-50%);
   cursor: pointer;
   font-size: 18px;
   color: #128C7E;
   user-select: none;
 }
 
+/* === Button Styles === */
 .signup-container button {
   width: 100%;
   padding: 10px;
@@ -66,13 +74,14 @@ body {
   border-radius: 8px;
   font-weight: bold;
   cursor: pointer;
-  transition: background-color 0.3s ease;
+  transition: background-color 0.3s;
 }
 
 .signup-container button:hover {
   background-color: #0f6b61;
 }
 
+/* === Links === */
 .forgot-link {
   margin-top: 10px;
   font-size: 14px;
@@ -84,12 +93,8 @@ body {
   font-weight: bold;
 }
 
-.forgot-link a:hover {
-  text-decoration: underline;
-}
-
+/* === Message Box === */
 #message {
   margin-top: 10px;
   font-weight: bold;
-  color: red;
 }
