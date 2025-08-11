@@ -14,12 +14,31 @@
             <li>🔇 Ensure your microphone and webcam are working.</li>
             <li>📶 Use a stable internet connection.</li>
             <li>🎧 Use headphones for better audio quality.</li>
+            <li>🚫 Do NOT refresh or press the back button during the interview.</li>
             <li>
                 <input type="checkbox" id="agreeCheck"> I have read and agree to the instructions.
             </li>
         </ul>
         <button id="agreeBtn" disabled>I Agree</button>
     </div>
+
+    <script>
+        // ✅ Disable refresh (F5, Ctrl+R) and back button
+        window.addEventListener("keydown", function(e) {
+            if ((e.key === "F5") || 
+                (e.ctrlKey && e.key.toLowerCase() === "r")) {
+                e.preventDefault();
+                alert("🚫 Refresh is disabled during the interview!");
+            }
+        });
+
+        // ✅ Prevent back button
+        history.pushState(null, null, location.href);
+        window.onpopstate = function () {
+            history.go(1);
+            alert("🚫 Back navigation is disabled during the interview!");
+        };
+    </script>
 
     <script src="instruction.js"></script> <!-- External JS -->
 </body>
