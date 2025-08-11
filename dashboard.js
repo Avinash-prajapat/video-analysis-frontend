@@ -324,7 +324,6 @@ function uploadRecordedVideo() {
     });
 }
 
-}
 
 
 
@@ -332,6 +331,7 @@ function uploadRecordedVideo() {
 
 // 🚀 Start speech recognition when script loads
 initSpeechRecognition();
+
 
 
 
