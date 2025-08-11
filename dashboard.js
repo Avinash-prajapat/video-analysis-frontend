@@ -349,180 +349,173 @@
 
 
 
-document.addEventListener("DOMContentLoaded", () => {
-    // ✅ Redirect to login if not logged in
-    if (!sessionStorage.getItem("isLoggedIn") || !localStorage.getItem("username") || !localStorage.getItem("mobile")) {
+// 🚀 Refresh ya back par login.html bhejne ka code
+window.addEventListener("pageshow", function (event) {
+    if (event.persisted || performance.getEntriesByType("navigation")[0].type === "reload") {
         window.location.href = "login.html";
     }
-
-    // 🎯 DOM Elements
-    const videoElement = document.getElementById('userVideo');
-    const startBtn = document.getElementById('startBtn');
-    const nextBtn = document.getElementById('nextBtn');
-    const submitBtn = document.getElementById('submitBtn');
-    const chatMessages = document.getElementById('chatMessages');
-    const currentQuestion = document.getElementById('currentQuestion');
-    const typingIndicator = document.getElementById('typingIndicator');
-
-    let questions = [];
-    let selectedSubject = "";
-    const questionBank = {
-        ml: ["What is supervised learning?", "What is overfitting?", "Explain SVM briefly."],
-        ds: ["What is a binary tree?", "Explain stack vs queue.", "What is a hash table?"],
-        oops: ["What is inheritance?", "Explain polymorphism.", "What is encapsulation?"],
-        cn: ["What is OSI model?", "What is TCP vs UDP?", "Explain IP addressing."],
-        dbms: ["What is normalization?", "What is ACID property?", "What is indexing?"]
-    };
-
-    let mediaStream;
-    let mediaRecorder;
-    let recordedChunks = [];
-    let recognition;
-    let isRecording = false;
-    let currentQuestionIndex = 0;
-
-    // ✅ Logout button event
-    const logoutBtn = document.getElementById("logoutBtn");
-    if (logoutBtn) {
-        logoutBtn.addEventListener("click", () => {
-            sessionStorage.clear();
-            localStorage.clear();
-            window.location.replace("login.html");
-        });
-    }
-
-    // 🧠 Initialize Speech Recognition
-    function initSpeechRecognition() {
-        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-        if (SpeechRecognition) {
-            recognition = new SpeechRecognition();
-            recognition.continuous = true;
-            recognition.interimResults = true;
-            recognition.onresult = (event) => {
-                let interimTranscript = '';
-                for (let i = event.resultIndex; i < event.results.length; i++) {
-                    const transcript = event.results[i][0].transcript;
-                    if (event.results[i].isFinal) {
-                        addMessage(transcript, 'user');
-                    } else {
-                        interimTranscript += transcript;
-                    }
-                }
-                if (interimTranscript) {
-                    const lastMessage = chatMessages.lastChild;
-                    if (lastMessage && lastMessage.classList.contains('interim')) {
-                        lastMessage.textContent = interimTranscript;
-                    } else {
-                        const interimElement = document.createElement('div');
-                        interimElement.className = 'message user interim';
-                        interimElement.textContent = interimTranscript;
-                        chatMessages.appendChild(interimElement);
-                    }
-                }
-            };
-        } else {
-            addMessage("Speech recognition not supported in this browser", 'system');
-        }
-    }
-
-    // 💬 Add message to chat
-    function addMessage(text, sender) {
-        document.querySelectorAll('.interim').forEach(msg => msg.remove());
-        const messageDiv = document.createElement('div');
-        messageDiv.className = `message ${sender}`;
-        messageDiv.textContent = text;
-        chatMessages.appendChild(messageDiv);
-        chatMessages.scrollTo({ top: chatMessages.scrollHeight, behavior: 'smooth' });
-    }
-
-    // ❓ Display current question
-    function displayCurrentQuestion() {
-        if (currentQuestionIndex < questions.length) {
-            const questionText = `Question ${currentQuestionIndex + 1}: ${questions[currentQuestionIndex]}`;
-            currentQuestion.textContent = questionText;
-            addMessage(questionText, 'system');
-        } else {
-            currentQuestion.textContent = "All questions completed. Ready to submit.";
-            nextBtn.disabled = true;
-            submitBtn.disabled = false;
-        }
-    }
-
-    // 🎥 Start recording
-    async function startRecording() {
-        try {
-            selectedSubject = document.getElementById('subjectSelect').value;
-            if (!selectedSubject) {
-                alert("⚠️ Please select a subject before starting!");
-                return;
-            }
-            questions = questionBank[selectedSubject];
-            mediaStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
-            videoElement.srcObject = mediaStream;
-            mediaRecorder = new MediaRecorder(mediaStream);
-            recordedChunks = [];
-            mediaRecorder.ondataavailable = (event) => {
-                if (event.data.size > 0) recordedChunks.push(event.data);
-            };
-            mediaRecorder.start(100);
-            if (recognition) recognition.start();
-            isRecording = true;
-            startBtn.disabled = true;
-            nextBtn.disabled = false;
-            displayCurrentQuestion();
-        } catch (error) {
-            addMessage("Error accessing camera/microphone", 'system');
-        }
-    }
-
-    // ⏭ Next question
-    function nextQuestion() {
-        if (isRecording) {
-            currentQuestionIndex++;
-            displayCurrentQuestion();
-            if (currentQuestionIndex >= questions.length) {
-                nextBtn.disabled = true;
-            }
-        }
-    }
-
-    // 📤 Upload video
-    function uploadRecordedVideo() {
-        if (recordedChunks.length === 0) {
-            alert("⚠️ No recording available to upload!");
-            return;
-        }
-        submitBtn.disabled = true;
-        submitBtn.textContent = "Submitting...";
-        const username = localStorage.getItem("username");
-        const mobile = localStorage.getItem("mobile");
-        const blob = new Blob(recordedChunks, { type: 'video/webm' });
-        const finalFilename = `${username}_${mobile}_video.webm`;
-        const file = new File([blob], finalFilename, { type: 'video/webm' });
-        const formData = new FormData();
-        formData.append("video", file);
-
-        fetch("https://video-analysis-backend-2l85.onrender.com/upload", {
-            method: "POST",
-            body: formData
-        })
-        .then(res => res.json())
-        .then(() => {
-            localStorage.setItem('uploadResultMessage', "✅ Thank You! Your Submission has been sent successfully!");
-            window.location.href = "result.html";
-        })
-        .catch(() => {
-            localStorage.setItem('uploadResultMessage', "⚠️ Something went wrong. Please try again.");
-            window.location.href = "result.html";
-        });
-    }
-
-    // 🎯 Event Listeners
-    startBtn?.addEventListener('click', startRecording);
-    nextBtn?.addEventListener('click', nextQuestion);
-    submitBtn?.addEventListener('click', uploadRecordedVideo);
-
-    // 🚀 Init
-    initSpeechRecognition();
 });
 
+window.addEventListener("popstate", function () {
+    window.location.href = "login.html";
+});
+
+// 🎯 DOM Elements
+const videoElement = document.getElementById('userVideo');
+const startBtn = document.getElementById('startBtn');
+const nextBtn = document.getElementById('nextBtn');
+const submitBtn = document.getElementById('submitBtn');
+const chatMessages = document.getElementById('chatMessages');
+const currentQuestion = document.getElementById('currentQuestion');
+const typingIndicator = document.getElementById('typingIndicator');
+
+let questions = [];
+let selectedSubject = "";
+const questionBank = {
+    ml: ["What is supervised learning?", "What is overfitting?", "Explain SVM briefly."],
+    ds: ["What is a binary tree?", "Explain stack vs queue.", "What is a hash table?"],
+    oops: ["What is inheritance?", "Explain polymorphism.", "What is encapsulation?"],
+    cn: ["What is OSI model?", "What is TCP vs UDP?", "Explain IP addressing."],
+    dbms: ["What is normalization?", "What is ACID property?", "What is indexing?"]
+};
+
+let mediaStream;
+let mediaRecorder;
+let recordedChunks = [];
+let recognition;
+let isRecording = false;
+let currentQuestionIndex = 0;
+
+// 🧠 Initialize Speech Recognition
+function initSpeechRecognition() {
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (SpeechRecognition) {
+        recognition = new SpeechRecognition();
+        recognition.continuous = true;
+        recognition.interimResults = true;
+        recognition.onresult = (event) => {
+            let interimTranscript = '';
+            for (let i = event.resultIndex; i < event.results.length; i++) {
+                const transcript = event.results[i][0].transcript;
+                if (event.results[i].isFinal) {
+                    addMessage(transcript, 'user');
+                } else {
+                    interimTranscript += transcript;
+                }
+            }
+            if (interimTranscript) {
+                const lastMessage = chatMessages.lastChild;
+                if (lastMessage && lastMessage.classList.contains('interim')) {
+                    lastMessage.textContent = interimTranscript;
+                } else {
+                    const interimElement = document.createElement('div');
+                    interimElement.className = 'message user interim';
+                    interimElement.textContent = interimTranscript;
+                    chatMessages.appendChild(interimElement);
+                }
+            }
+        };
+    } else {
+        addMessage("Speech recognition not supported in this browser", 'system');
+    }
+}
+
+// 💬 Add message to chat
+function addMessage(text, sender) {
+    document.querySelectorAll('.interim').forEach(msg => msg.remove());
+    const messageDiv = document.createElement('div');
+    messageDiv.className = `message ${sender}`;
+    messageDiv.textContent = text;
+    chatMessages.appendChild(messageDiv);
+    chatMessages.scrollTo({ top: chatMessages.scrollHeight, behavior: 'smooth' });
+}
+
+// ❓ Display current question
+function displayCurrentQuestion() {
+    if (currentQuestionIndex < questions.length) {
+        const questionText = `Question ${currentQuestionIndex + 1}: ${questions[currentQuestionIndex]}`;
+        currentQuestion.textContent = questionText;
+        addMessage(questionText, 'system');
+    } else {
+        currentQuestion.textContent = "All questions completed. Ready to submit.";
+        nextBtn.disabled = true;
+        submitBtn.disabled = false;
+    }
+}
+
+// 🎥 Start recording
+async function startRecording() {
+    try {
+        selectedSubject = document.getElementById('subjectSelect').value;
+        if (!selectedSubject) {
+            alert("⚠️ Please select a subject before starting!");
+            return;
+        }
+        questions = questionBank[selectedSubject];
+        mediaStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
+        videoElement.srcObject = mediaStream;
+        mediaRecorder = new MediaRecorder(mediaStream);
+        recordedChunks = [];
+        mediaRecorder.ondataavailable = (event) => {
+            if (event.data.size > 0) recordedChunks.push(event.data);
+        };
+        mediaRecorder.start(100);
+        if (recognition) recognition.start();
+        isRecording = true;
+        startBtn.disabled = true;
+        nextBtn.disabled = false;
+        displayCurrentQuestion();
+    } catch (error) {
+        addMessage("Error accessing camera/microphone", 'system');
+    }
+}
+
+// ⏭ Next question
+function nextQuestion() {
+    if (isRecording) {
+        currentQuestionIndex++;
+        displayCurrentQuestion();
+        if (currentQuestionIndex >= questions.length) {
+            nextBtn.disabled = true;
+        }
+    }
+}
+
+// 📤 Upload video
+function uploadRecordedVideo() {
+    if (recordedChunks.length === 0) {
+        alert("⚠️ No recording available to upload!");
+        return;
+    }
+    submitBtn.disabled = true;
+    submitBtn.textContent = "Submitting...";
+    const username = localStorage.getItem("username") || "guest";
+    const mobile = localStorage.getItem("mobile") || "0000";
+    const blob = new Blob(recordedChunks, { type: 'video/webm' });
+    const finalFilename = `${username}_${mobile}_video.webm`;
+    const file = new File([blob], finalFilename, { type: 'video/webm' });
+    const formData = new FormData();
+    formData.append("video", file);
+
+    fetch("https://video-analysis-backend-2l85.onrender.com/upload", {
+        method: "POST",
+        body: formData
+    })
+    .then(res => res.json())
+    .then(() => {
+        localStorage.setItem('uploadResultMessage', "✅ Thank You! Your Submission has been sent successfully!");
+        window.location.href = "result.html";
+    })
+    .catch(() => {
+        localStorage.setItem('uploadResultMessage', "⚠️ Something went wrong. Please try again.");
+        window.location.href = "result.html";
+    });
+}
+
+// 🎯 Event Listeners
+startBtn.addEventListener('click', startRecording);
+nextBtn.addEventListener('click', nextQuestion);
+submitBtn.addEventListener('click', uploadRecordedVideo);
+
+// 🚀 Init
+initSpeechRecognition();
