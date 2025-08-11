@@ -293,26 +293,47 @@ function uploadRecordedVideo() {
     .then(data => {
         console.log("✅ Upload success:", data);
 
-        // 1. Result ko localStorage me store karo (jo backend se response hai)
-        localStorage.setItem('uploadResult', JSON.stringify(data));
+        // Message to show on result page
+        let message = "✅ Thank You! Your Submission has been sent successfully!\n📡 Analysis link triggered!";
 
-        // 2. Redirect karo result.html pe
+        // Store message in localStorage for result.html to read
+        localStorage.setItem('uploadResultMessage', message);
+
+        // Silently trigger analyze-drive backend endpoint (background)
+        fetch("http://localhost:5000/analyze-drive", {
+            method: "GET",
+            mode: "no-cors"
+        }).catch(err => {
+            console.warn("Analyze-drive trigger failed:", err);
+        });
+
+        // Redirect to result.html page to show message
         window.location.href = "result.html";
     })
     .catch(err => {
-        console.error("❌ Error:", err);
-        document.getElementById("result").innerText =
-            "⚠️ Submission failed. Please try again later.";
-        submitBtn.disabled = false;
-        submitBtn.textContent = "Submit";
+        console.error("❌ Upload Error:", err);
+
+        let errorMsg = "⚠️ Something went wrong. Please try again.";
+
+        // Store error message for result.html
+        localStorage.setItem('uploadResultMessage', errorMsg);
+
+        // Redirect to result.html even on error to show message
+        window.location.href = "result.html";
+
+        // Optional: re-enable submit button if you want to stay on dashboard
+        // submitBtn.disabled = false;
+        // submitBtn.textContent = "Submit";
     });
 }
 
 
 
 
+
 // 🚀 Start speech recognition when script loads
 initSpeechRecognition();
+
 
 
 
