@@ -1,4 +1,3 @@
-/* Body background and centering */
 body {
     margin: 0;
     padding: 0;
@@ -10,7 +9,6 @@ body {
     align-items: center;
 }
 
-/* Main container with white background */
 .result-container {
     background: white;
     padding: 30px 40px;
@@ -20,13 +18,11 @@ body {
     text-align: center;
 }
 
-/* Heading style */
 .result-container h2 {
-    margin: 0 0 20px 0;
+    margin-bottom: 20px;
     color: #333;
 }
 
-/* Pre tag styling to show JSON or text nicely */
 #resultContent {
     background-color: #f4f7f8;
     border: 1px solid #ddd;
@@ -36,12 +32,11 @@ body {
     overflow-y: auto;
     text-align: left;
     font-size: 14px;
-    white-space: pre-wrap;  /* Wrap lines */
+    white-space: pre-wrap;
     word-wrap: break-word;
     color: #222;
 }
 
-/* Back button styling */
 #backBtn {
     margin-top: 20px;
     padding: 12px 25px;
@@ -54,12 +49,10 @@ body {
     transition: background-color 0.3s ease;
 }
 
-/* Hover effect */
 #backBtn:hover {
     background-color: #0b665a;
 }
 
-/* Responsive on small screens */
 @media (max-width: 450px) {
     .result-container {
         width: 90%;
