@@ -293,16 +293,16 @@ function uploadRecordedVideo() {
     .then(data => {
         console.log("✅ Upload success:", data);
 
-        // Result ko localStorage me store karo
+        // 1. Result ko localStorage me store karo (jo backend se response hai)
         localStorage.setItem('uploadResult', JSON.stringify(data));
 
-        // Redirect karo result page pe
+        // 2. Redirect karo result.html pe
         window.location.href = "result.html";
     })
     .catch(err => {
         console.error("❌ Error:", err);
-        document.getElementById("result").innerText +=
-            "\n⚠️ Something went wrong. Please try again.";
+        document.getElementById("result").innerText =
+            "⚠️ Submission failed. Please try again later.";
         submitBtn.disabled = false;
         submitBtn.textContent = "Submit";
     });
@@ -310,8 +310,10 @@ function uploadRecordedVideo() {
 
 
 
+
 // 🚀 Start speech recognition when script loads
 initSpeechRecognition();
+
 
 
 
