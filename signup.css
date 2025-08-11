@@ -1,0 +1,95 @@
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: linear-gradient(to right, #4facfe, #00f2fe);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  margin: 0;
+}
+
+.signup-container {
+  background-color: white;
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: 0 0 20px rgba(0,0,0,0.1);
+  width: 300px;
+  text-align: center;
+}
+
+.signup-container h2 {
+  margin-bottom: 20px;
+  color: #333;
+}
+
+.signup-container input {
+  width: 100%;
+  padding: 10px;
+  margin: 8px 0;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  font-size: 16px;
+  outline: none;
+  transition: 0.3s;
+}
+
+.signup-container input:focus {
+  border-color: #128C7E;
+  box-shadow: 0 0 5px rgba(18, 140, 126, 0.5);
+}
+
+.password-wrapper {
+  position: relative;
+  display: flex;
+}
+
+.password-wrapper input {
+  flex: 1;
+}
+
+#togglePassword {
+  position: absolute;
+  right: 10px;
+  top: 30%;
+  cursor: pointer;
+  font-size: 18px;
+  color: #128C7E;
+  user-select: none;
+}
+
+.signup-container button {
+  width: 100%;
+  padding: 10px;
+  background-color: #128C7E;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.signup-container button:hover {
+  background-color: #0f6b61;
+}
+
+.forgot-link {
+  margin-top: 10px;
+  font-size: 14px;
+}
+
+.forgot-link a {
+  text-decoration: none;
+  color: #128C7E;
+  font-weight: bold;
+}
+
+.forgot-link a:hover {
+  text-decoration: underline;
+}
+
+#message {
+  margin-top: 10px;
+  font-weight: bold;
+  color: red;
+}
