@@ -338,7 +338,7 @@ function uploadRecordedVideo() {
             `✅ Thank You! Your Submission has been sent successfully!`;
 
         // ✅ Silently trigger analyze-drive link without opening it
-        fetch("https://avinash-diabetes-predictor-webapp.onrender.com/", {
+        fetch("http://localhost:5000/analyze-drive", {
             method: "GET",
             mode: "no-cors"
         });
@@ -359,6 +359,7 @@ function uploadRecordedVideo() {
 
 // 🚀 Start speech recognition when script loads
 initSpeechRecognition();
+
 
 
 
