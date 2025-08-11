@@ -351,28 +351,18 @@
 
 document.addEventListener("DOMContentLoaded", () => {
     // ✅ Redirect to login if not logged in
-    if (
-        !sessionStorage.getItem("isLoggedIn") ||
-        !localStorage.getItem("username") ||
-        !localStorage.getItem("mobile")
-    ) {
+    if (!sessionStorage.getItem("isLoggedIn") || !localStorage.getItem("username") || !localStorage.getItem("mobile")) {
         window.location.href = "login.html";
     }
 
-    // ✅ Logout button event
-    document.getElementById("logoutBtn").addEventListener("click", () => {
-        sessionStorage.clear();
-        localStorage.clear();
-        window.location.replace("login.html"); // replace() so back button won't work
-    });
-
     // 🎯 DOM Elements
-    const videoElement = document.getElementById("userVideo");
-    const startBtn = document.getElementById("startBtn");
-    const nextBtn = document.getElementById("nextBtn");
-    const submitBtn = document.getElementById("submitBtn");
-    const chatMessages = document.getElementById("chatMessages");
-    const currentQuestion = document.getElementById("currentQuestion");
+    const videoElement = document.getElementById('userVideo');
+    const startBtn = document.getElementById('startBtn');
+    const nextBtn = document.getElementById('nextBtn');
+    const submitBtn = document.getElementById('submitBtn');
+    const chatMessages = document.getElementById('chatMessages');
+    const currentQuestion = document.getElementById('currentQuestion');
+    const typingIndicator = document.getElementById('typingIndicator');
 
     let questions = [];
     let selectedSubject = "";
@@ -391,6 +381,16 @@ document.addEventListener("DOMContentLoaded", () => {
     let isRecording = false;
     let currentQuestionIndex = 0;
 
+    // ✅ Logout button event
+    const logoutBtn = document.getElementById("logoutBtn");
+    if (logoutBtn) {
+        logoutBtn.addEventListener("click", () => {
+            sessionStorage.clear();
+            localStorage.clear();
+            window.location.replace("login.html");
+        });
+    }
+
     // 🧠 Initialize Speech Recognition
     function initSpeechRecognition() {
         const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
@@ -399,40 +399,40 @@ document.addEventListener("DOMContentLoaded", () => {
             recognition.continuous = true;
             recognition.interimResults = true;
             recognition.onresult = (event) => {
-                let interimTranscript = "";
+                let interimTranscript = '';
                 for (let i = event.resultIndex; i < event.results.length; i++) {
                     const transcript = event.results[i][0].transcript;
                     if (event.results[i].isFinal) {
-                        addMessage(transcript, "user");
+                        addMessage(transcript, 'user');
                     } else {
                         interimTranscript += transcript;
                     }
                 }
                 if (interimTranscript) {
                     const lastMessage = chatMessages.lastChild;
-                    if (lastMessage && lastMessage.classList.contains("interim")) {
+                    if (lastMessage && lastMessage.classList.contains('interim')) {
                         lastMessage.textContent = interimTranscript;
                     } else {
-                        const interimElement = document.createElement("div");
-                        interimElement.className = "message user interim";
+                        const interimElement = document.createElement('div');
+                        interimElement.className = 'message user interim';
                         interimElement.textContent = interimTranscript;
                         chatMessages.appendChild(interimElement);
                     }
                 }
             };
         } else {
-            addMessage("Speech recognition not supported in this browser", "system");
+            addMessage("Speech recognition not supported in this browser", 'system');
         }
     }
 
     // 💬 Add message to chat
     function addMessage(text, sender) {
-        document.querySelectorAll(".interim").forEach(msg => msg.remove());
-        const messageDiv = document.createElement("div");
+        document.querySelectorAll('.interim').forEach(msg => msg.remove());
+        const messageDiv = document.createElement('div');
         messageDiv.className = `message ${sender}`;
         messageDiv.textContent = text;
         chatMessages.appendChild(messageDiv);
-        chatMessages.scrollTo({ top: chatMessages.scrollHeight, behavior: "smooth" });
+        chatMessages.scrollTo({ top: chatMessages.scrollHeight, behavior: 'smooth' });
     }
 
     // ❓ Display current question
@@ -440,7 +440,7 @@ document.addEventListener("DOMContentLoaded", () => {
         if (currentQuestionIndex < questions.length) {
             const questionText = `Question ${currentQuestionIndex + 1}: ${questions[currentQuestionIndex]}`;
             currentQuestion.textContent = questionText;
-            addMessage(questionText, "system");
+            addMessage(questionText, 'system');
         } else {
             currentQuestion.textContent = "All questions completed. Ready to submit.";
             nextBtn.disabled = true;
@@ -451,7 +451,7 @@ document.addEventListener("DOMContentLoaded", () => {
     // 🎥 Start recording
     async function startRecording() {
         try {
-            selectedSubject = document.getElementById("subjectSelect").value;
+            selectedSubject = document.getElementById('subjectSelect').value;
             if (!selectedSubject) {
                 alert("⚠️ Please select a subject before starting!");
                 return;
@@ -471,7 +471,7 @@ document.addEventListener("DOMContentLoaded", () => {
             nextBtn.disabled = false;
             displayCurrentQuestion();
         } catch (error) {
-            addMessage("Error accessing camera/microphone", "system");
+            addMessage("Error accessing camera/microphone", 'system');
         }
     }
 
@@ -496,9 +496,9 @@ document.addEventListener("DOMContentLoaded", () => {
         submitBtn.textContent = "Submitting...";
         const username = localStorage.getItem("username");
         const mobile = localStorage.getItem("mobile");
-        const blob = new Blob(recordedChunks, { type: "video/webm" });
+        const blob = new Blob(recordedChunks, { type: 'video/webm' });
         const finalFilename = `${username}_${mobile}_video.webm`;
-        const file = new File([blob], finalFilename, { type: "video/webm" });
+        const file = new File([blob], finalFilename, { type: 'video/webm' });
         const formData = new FormData();
         formData.append("video", file);
 
@@ -508,20 +508,21 @@ document.addEventListener("DOMContentLoaded", () => {
         })
         .then(res => res.json())
         .then(() => {
-            localStorage.setItem("uploadResultMessage", "✅ Thank You! Your Submission has been sent successfully!");
+            localStorage.setItem('uploadResultMessage', "✅ Thank You! Your Submission has been sent successfully!");
             window.location.href = "result.html";
         })
         .catch(() => {
-            localStorage.setItem("uploadResultMessage", "⚠️ Something went wrong. Please try again.");
+            localStorage.setItem('uploadResultMessage', "⚠️ Something went wrong. Please try again.");
             window.location.href = "result.html";
         });
     }
 
     // 🎯 Event Listeners
-    startBtn.addEventListener("click", startRecording);
-    nextBtn.addEventListener("click", nextQuestion);
-    submitBtn.addEventListener("click", uploadRecordedVideo);
+    startBtn?.addEventListener('click', startRecording);
+    nextBtn?.addEventListener('click', nextQuestion);
+    submitBtn?.addEventListener('click', uploadRecordedVideo);
 
     // 🚀 Init
     initSpeechRecognition();
 });
+
