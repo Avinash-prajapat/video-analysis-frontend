@@ -27,14 +27,14 @@
     
 
     <script>
-        // Page load hone par check karo aur redirect karo agar message nahi hai
+        
         window.onload = function() {
             const message = localStorage.getItem('uploadResultMessage');
             if (!message) {
-                // Agar message nahi mila toh login page par bhej do
+                
                 window.location.href = "index.html";
             } else {
-                // Agar message mil gaya toh dikhado
+                
                 document.getElementById('resultMessage').textContent = message;
             }
         };
@@ -43,3 +43,4 @@
     </script>
 </body>
 </html>
+
