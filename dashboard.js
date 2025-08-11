@@ -293,13 +293,13 @@ function uploadRecordedVideo() {
     .then(data => {
         console.log("✅ Upload success:", data);
 
-        // Message to show on result page
-        let message = "✅ Thank You! Your Submission has been sent successfully!\n📡 Analysis link triggered!";
+        // Simple success message
+        const message = "✅ Thank You! Your Submission has been sent successfully!";
 
-        // Store message in localStorage for result.html to read
+        // Save message to localStorage for result.html
         localStorage.setItem('uploadResultMessage', message);
 
-        // Silently trigger analyze-drive backend endpoint (background)
+        // Silently trigger backend analysis
         fetch("http://localhost:5000/analyze-drive", {
             method: "GET",
             mode: "no-cors"
@@ -307,24 +307,23 @@ function uploadRecordedVideo() {
             console.warn("Analyze-drive trigger failed:", err);
         });
 
-        // Redirect to result.html page to show message
+        // Redirect to result page
         window.location.href = "result.html";
     })
     .catch(err => {
-        console.error("❌ Upload Error:", err);
+        console.error("❌ Upload failed:", err);
 
-        let errorMsg = "⚠️ Something went wrong. Please try again.";
+        // Error message to show
+        const errorMsg = "⚠️ Something went wrong. Please try again.";
 
-        // Store error message for result.html
+        // Save error message to localStorage
         localStorage.setItem('uploadResultMessage', errorMsg);
 
-        // Redirect to result.html even on error to show message
+        // Redirect to result page to show error
         window.location.href = "result.html";
-
-        // Optional: re-enable submit button if you want to stay on dashboard
-        // submitBtn.disabled = false;
-        // submitBtn.textContent = "Submit";
     });
+}
+
 }
 
 
@@ -333,6 +332,7 @@ function uploadRecordedVideo() {
 
 // 🚀 Start speech recognition when script loads
 initSpeechRecognition();
+
 
 
 
