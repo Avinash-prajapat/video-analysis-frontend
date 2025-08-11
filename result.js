@@ -1,17 +1,12 @@
-const resultContent = document.getElementById('resultContent');
+const resultMessage = document.getElementById('resultMessage');
 const backBtn = document.getElementById('backBtn');
 
-const storedResult = localStorage.getItem('uploadResult');
+const message = localStorage.getItem('uploadResultMessage');
 
-if (storedResult) {
-    try {
-        const resultObj = JSON.parse(storedResult);
-        resultContent.textContent = JSON.stringify(resultObj, null, 2);
-    } catch (e) {
-        resultContent.textContent = storedResult;
-    }
+if (message) {
+    resultMessage.textContent = message;
 } else {
-    resultContent.textContent = "No submission result found.";
+    resultMessage.textContent = "No submission status available.";
 }
 
 backBtn.addEventListener('click', () => {
