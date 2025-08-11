@@ -92,9 +92,12 @@
       resultDiv.textContent = "No submission status available.";
     }
 
-    
+    // 🔒 Disable back button after submission
+    history.pushState(null, "", location.href);
+    window.onpopstate = function () {
+      history.pushState(null, "", location.href);
+      alert("⚠️ You cannot go back after submission!");
+    };
   </script>
 </body>
 </html>
-
-
