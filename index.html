@@ -9,19 +9,22 @@
     <div class="login-container">
         <h2>🎥 Interview Portal Login</h2>
 
-        <!-- Form -->
+        <!-- 🔴 CHANGE: Added form wrapper -->
         <form id="loginForm">
             <input type="text" id="username" placeholder="👤 Username" required />
             <input type="password" id="password" placeholder="🔒 Password" required />
-            <button id="loginBtn" type="submit">Login</button>
+            <!-- 🔴 CHANGE: Button type set to submit -->
+            <button id ="loginBtn" type="submit">Login</button>
         </form>
 
         <p id="errorMsg"></p>
-        <p><a href="forget_password.html">Forgot Password?</a></p>
+        
+        <p><a href="forgot_password.html">Forgot Password?</a></p>
+
+        <!-- ✅ Signup link remains same -->
         <p class="signup-link">Don't have an account? <a href="signup.html">Sign up</a></p>
     </div>
 
-    <!-- External JS -->
     <script src="index.js"></script>
 </body>
 </html>
