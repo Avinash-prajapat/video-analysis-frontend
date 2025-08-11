@@ -352,7 +352,7 @@
 // 🚀 Refresh ya back par login.html bhejne ka code
 window.addEventListener("pageshow", function (event) {
     if (event.persisted || performance.getEntriesByType("navigation")[0].type === "reload") {
-        window.location.href = "login.html";
+        window.location.href = "index.html";
     }
 });
 
@@ -519,3 +519,4 @@ submitBtn.addEventListener('click', uploadRecordedVideo);
 
 // 🚀 Init
 initSpeechRecognition();
+
