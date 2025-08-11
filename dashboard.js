@@ -356,14 +356,15 @@
 
 
 // ✅ Redirect to login if not logged in
-if (!localStorage.getItem("username") || !localStorage.getItem("mobile")) {
+if (!sessionStorage.getItem("isLoggedIn") || !localStorage.getItem("username") || !localStorage.getItem("mobile")) {
     window.location.href = "login.html";
 }
 
 // ✅ Logout button event
 document.getElementById("logoutBtn").addEventListener("click", () => {
+    sessionStorage.clear();
     localStorage.clear();
-    window.location.href = "login.html";
+    window.location.replace("login.html"); // replace() so back button won't work
 });
 
 // 🎯 DOM Elements
@@ -525,14 +526,3 @@ submitBtn.addEventListener('click', uploadRecordedVideo);
 
 // 🚀 Init
 initSpeechRecognition();
-
-
-
-
-
-
-
-
-
-
-
