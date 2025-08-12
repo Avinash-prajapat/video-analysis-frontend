@@ -730,7 +730,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const formData = new FormData();
         formData.append("video", file);
 
-        fetch("https://video-analysis-backend-2l85.onrender.com/upload", {
+        //fetch("https://video-analysis-backend-2l85.onrender.com/upload", {
             method: "POST",
             body: formData
         })
@@ -782,6 +782,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Initialize speech recognition
     initSpeechRecognition();
 });
+
 
 
 
