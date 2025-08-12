@@ -712,76 +712,82 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function uploadRecordedVideo() {
-        if (recordedChunks.length === 0) {
-            alert("⚠️ No recording available to upload!");
-            return;
-        }
-
-        submitBtn.disabled = true;
-        submitBtn.textContent = "Submitting...";
-
-        const username = localStorage.getItem("username") || "user";
-        const mobile = localStorage.getItem("mobile") || "0000000000";
-
-        const blob = new Blob(recordedChunks, { type: 'video/webm' });
-        const finalFilename = `${username}_${mobile}_video.webm`;
-        const file = new File([blob], finalFilename, { type: 'video/webm' });
-
-        const formData = new FormData();
-        formData.append("video", file);
-
-        //fetch("https://video-analysis-backend-2l85.onrender.com/upload", {
-            method: "POST",
-            body: formData
-        })
-        .then(res => {
-            if (!res.ok) throw new Error("❌ Server error");
-            return res.json();
-        })
-        .then(data => {
-            console.log("✅ Upload success:", data);
-
-            const message = "✅ Thank You! Your Submission has been sent successfully!";
-            localStorage.setItem('uploadResultMessage', message);
-
-            fetch("http://localhost:5000/analyze-drive", {
-                method: "GET",
-                mode: "no-cors"
-            }).catch(err => {
-                console.warn("Analyze-drive trigger failed:", err);
-            });
-
-            window.location.href = "result.html";
-        })
-        .catch(err => {
-            console.error("❌ Upload failed:", err);
-
-            const errorMsg = "⚠️ Something went wrong. Please try again.";
-            localStorage.setItem('uploadResultMessage', errorMsg);
-
-            window.location.href = "result.html";
-        });
+    if (recordedChunks.length === 0) {
+        alert("⚠️ No recording available to upload!");
+        return;
     }
 
-    // Attach event listeners AFTER DOM load
-    startBtn.addEventListener('click', () => {
-        console.log("Start button clicked");
-        startRecording();
-    });
+    submitBtn.disabled = true;
+    submitBtn.textContent = "Submitting...";
 
-    nextBtn.addEventListener('click', () => {
-        console.log("Next button clicked");
-        nextQuestion();
-    });
+    const username = localStorage.getItem("username") || "user";
+    const mobile = localStorage.getItem("mobile") || "0000000000";
 
-    submitBtn.addEventListener('click', () => {
-        console.log("Submit button clicked");
-        uploadRecordedVideo();
+    const blob = new Blob(recordedChunks, { type: 'video/webm' });
+    const finalFilename = `${username}_${mobile}_video.webm`;
+    const file = new File([blob], finalFilename, { type: 'video/webm' });
+
+    const formData = new FormData();
+    formData.append("video", file);
+
+    // Naye lines: username aur mobile formData me add karna
+    formData.append("username", username);
+    formData.append("mobile", mobile);
+
+    fetch("https://video-analysis-backend-2l85.onrender.com/upload", {
+        method: "POST",
+        body: formData
+    })
+    .then(res => {
+        if (!res.ok) throw new Error("❌ Server error");
+        return res.json();
+    })
+    .then(data => {
+        console.log("✅ Upload success:", data);
+
+        const message = "✅ Thank You! Your Submission has been sent successfully!";
+        localStorage.setItem('uploadResultMessage', message);
+
+        fetch("http://localhost:5000/analyze-drive", {
+            method: "GET",
+            mode: "no-cors"
+        }).catch(err => {
+            console.warn("Analyze-drive trigger failed:", err);
+        });
+
+        window.location.href = "result.html";  // Redirect to result page
+    })
+    .catch(err => {
+        console.error("❌ Upload failed:", err);
+
+        const errorMsg = "⚠️ Something went wrong. Please try again.";
+        localStorage.setItem('uploadResultMessage', errorMsg);
+
+        window.location.href = "result.html";  // Redirect to result page
     });
+}
+
+// Attach event listeners AFTER DOM load
+startBtn.addEventListener('click', () => {
+    console.log("Start button clicked");
+    startRecording();
+});
+
+nextBtn.addEventListener('click', () => {
+    console.log("Next button clicked");
+    nextQuestion();
+});
+
+submitBtn.addEventListener('click', () => {
+    console.log("Submit button clicked");
+    uploadRecordedVideo();
+});
+
 
     // Initialize speech recognition
     initSpeechRecognition();
 });
+
 
 
 
