@@ -511,7 +511,7 @@ function uploadRecordedVideo() {
     const formData = new FormData();
     formData.append("video", file);
 
-    fetch("https://video-analysis-backend-2l85.onrender.com/upload", { method: "POST", body: formData })
+    //fetch("https://video-analysis-backend-2l85.onrender.com/upload", { method: "POST", body: formData })
         .then(res => {
             if (!res.ok) throw new Error("❌ Server error");
             return res.json();
@@ -532,3 +532,4 @@ nextBtn.addEventListener('click', nextQuestion);
 submitBtn.addEventListener('click', uploadRecordedVideo);
 
 initSpeechRecognition();
+
