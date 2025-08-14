@@ -724,7 +724,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const mobile = localStorage.getItem("mobile") || "0000000000";
 
     const blob = new Blob(recordedChunks, { type: 'video/webm' });
-    const finalFilename = `${username}_${mobile}_video.webm`;
+    const finalFilename = `video.webm`;  // sirf simple naam
     const file = new File([blob], finalFilename, { type: 'video/webm' });
 
     const formData = new FormData();
@@ -787,6 +787,7 @@ submitBtn.addEventListener('click', () => {
     // Initialize speech recognition
     initSpeechRecognition();
 });
+
 
 
 
