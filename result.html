@@ -77,15 +77,15 @@
   </div>
 
   <script>
-    // 🔹 Agar login flag nahi hai to direct login page bhej do
-    if (!sessionStorage.getItem("isLoggedIn")) {
+    // ✅ Only allow if came from dashboard
+    if (!sessionStorage.getItem("fromDashboard")) {
         window.location.replace("index.html");
     }
 
-    // 🔹 Browser back button disable
+    // ✅ Back button → index.html
     history.pushState(null, "", location.href);
     window.onpopstate = function () {
-        history.pushState(null, "", location.href);
+        window.location.replace("index.html");
     };
 
     const message = localStorage.getItem('uploadResultMessage');
@@ -96,6 +96,8 @@
     } else {
       resultDiv.textContent = "No submission status available.";
     }
-  </script>
+</script>
+
 </body>
 </html>
+
