@@ -76,34 +76,37 @@
     <div id="resultMessage">Loading...</div>
   </div>
 
-  <script>
-    // Only allow if came from dashboard
+<script>
+    // ✅ Only allow if came from dashboard
     if (!sessionStorage.getItem("fromDashboard")) {
         window.location.replace("index.html");
     }
 
-    // Back button → directly index.html (skip instruction)
-    history.replaceState(null, "", location.href); // current ko replace karo
-    history.pushState(null, "", location.href);    // ek dummy entry banao
+    // ✅ Replace history so that back button goes directly to index.html
+    history.replaceState(null, "", location.href); // replace current entry
+    history.pushState(null, "", location.href);    // dummy entry
+
     window.onpopstate = function () {
+        // Back button press → index.html
+        sessionStorage.removeItem("fromDashboard"); // clean-up flag
         window.location.replace("index.html");
     };
 
-    // Show result message
+    // ✅ Display submission result
     const message = localStorage.getItem('uploadResultMessage');
     const resultDiv = document.getElementById('resultMessage');
+    resultDiv.textContent = message ? message : "No submission status available.";
 
-    if (message) {
-        resultDiv.textContent = message;
-    } else {
-        resultDiv.textContent = "No submission status available.";
-    }
+    // Optional: remove flag after showing page to prevent misuse
+    sessionStorage.removeItem("fromDashboard");
 </script>
+
 
 
 
 </body>
 </html>
+
 
 
 
