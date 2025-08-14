@@ -77,19 +77,19 @@
   </div>
 
   <script>
-    // ✅ Only allow if came from dashboard
+    // Only allow if came from dashboard
     if (!sessionStorage.getItem("fromDashboard")) {
         window.location.replace("index.html");
     }
 
-    // ✅ Back button → directly index.html (skip instruction)
+    // Back button → directly index.html (skip instruction)
     history.replaceState(null, "", location.href); // current ko replace karo
     history.pushState(null, "", location.href);    // ek dummy entry banao
     window.onpopstate = function () {
         window.location.replace("index.html");
     };
 
-    // ✅ Show result message
+    // Show result message
     const message = localStorage.getItem('uploadResultMessage');
     const resultDiv = document.getElementById('resultMessage');
 
@@ -104,6 +104,7 @@
 
 </body>
 </html>
+
 
 
 
