@@ -1,6 +1,6 @@
 //  Set total questions & time
 const totalQuestions = 3;  // Total questions
-const totalTime = 15;      // Total time in minutes
+const totalTime = 1;      // Total time in minutes
 
 document.getElementById("totalQuestions").textContent = totalQuestions;
 document.getElementById("totalTime").textContent = totalTime;
@@ -18,3 +18,4 @@ agreeCheck.addEventListener("change", () => {
 agreeBtn.addEventListener("click", () => {
     window.location.href = "dashboard.html";
 });
+
