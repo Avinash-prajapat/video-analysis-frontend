@@ -1,5 +1,5 @@
 // 🟢 Total Questions & Time (ye tum hardcode kar sakte ho ya sessionStorage se la sakte ho)
-const totalQuestions = 10; // apne hisaab se change karo
+const totalQuestions = 3; // apne hisaab se change karo
 const totalTime = 15; // minutes
 
 document.getElementById("totalQuestions").textContent = totalQuestions;
@@ -18,3 +18,4 @@ agreeCheck.addEventListener("change", () => {
 agreeBtn.addEventListener("click", () => {
     window.location.href = "dashboard.html"; // Interview page
 });
+
