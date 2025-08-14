@@ -729,8 +729,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const formData = new FormData();
     formData.append("video", file);
-
-    // Naye lines: username aur mobile formData me add karna
     formData.append("username", username);
     formData.append("mobile", mobile);
 
@@ -755,7 +753,11 @@ document.addEventListener('DOMContentLoaded', () => {
             console.warn("Analyze-drive trigger failed:", err);
         });
 
-        window.location.href = "result.html";  // Redirect to result page
+        // ✅ Mark that it came from dashboard
+        sessionStorage.setItem("fromDashboard", "true");
+
+        // ✅ Replace history so dashboard skip हो
+        window.location.replace("result.html");
     })
     .catch(err => {
         console.error("❌ Upload failed:", err);
@@ -763,9 +765,11 @@ document.addEventListener('DOMContentLoaded', () => {
         const errorMsg = "⚠️ Something went wrong. Please try again.";
         localStorage.setItem('uploadResultMessage', errorMsg);
 
-        window.location.href = "result.html";  // Redirect to result page
+        sessionStorage.setItem("fromDashboard", "true");
+        window.location.replace("result.html");
     });
 }
+
 
 // Attach event listeners AFTER DOM load
 startBtn.addEventListener('click', () => {
@@ -787,6 +791,7 @@ submitBtn.addEventListener('click', () => {
     // Initialize speech recognition
     initSpeechRecognition();
 });
+
 
 
 
