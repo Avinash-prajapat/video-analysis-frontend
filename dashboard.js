@@ -1,3 +1,4 @@
+sessionStorage.removeItem("fromInstruction");
 document.addEventListener('DOMContentLoaded', () => {
     // 🎯 DOM Elements: Fetching elements after DOM is fully loaded
     const videoElement = document.getElementById('userVideo');
@@ -757,6 +758,7 @@ document.addEventListener('DOMContentLoaded', () => {
 //     // Initialize speech recognition
 //     initSpeechRecognition();
 // });
+
 
 
 
