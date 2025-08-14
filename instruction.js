@@ -1,3 +1,10 @@
+// 🟢 Total Questions & Time (ye tum hardcode kar sakte ho ya sessionStorage se la sakte ho)
+const totalQuestions = 10; // apne hisaab se change karo
+const totalTime = 15; // minutes
+
+document.getElementById("totalQuestions").textContent = totalQuestions;
+document.getElementById("totalTime").textContent = totalTime;
+
 // 🟢 Checkbox & Button References
 const agreeCheck = document.getElementById("agreeCheck");
 const agreeBtn = document.getElementById("agreeBtn");
