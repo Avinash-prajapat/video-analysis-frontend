@@ -1,17 +1,14 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // 🎯 DOM Elements
+    // 🎯 DOM Elements: Fetching elements after DOM is fully loaded
     const videoElement = document.getElementById('userVideo');
     const startBtn = document.getElementById('startBtn');
     const nextBtn = document.getElementById('nextBtn');
     const submitBtn = document.getElementById('submitBtn');
     const chatMessages = document.getElementById('chatMessages');
     const currentQuestion = document.getElementById('currentQuestion');
-    
-    // ✅ Timer Elements (add these in dashboard.html)
-    let timerText = document.getElementById("timerText");
-    let timerBar = document.getElementById("timerBar");
+    const typingIndicator = document.getElementById('typingIndicator'); // Optional
 
-    let questions = [];
+    let questions = [];  // Dynamically filled based on subject
     let selectedSubject = "";
 
     const questionBank = {
@@ -42,18 +39,14 @@ document.addEventListener('DOMContentLoaded', () => {
         ]
     };
 
-    let mediaStream;
-    let mediaRecorder;
-    let recordedChunks = [];
-    let recognition;
+    let mediaStream;         // Stores video+audio stream
+    let mediaRecorder;       // Object that records the stream
+    let recordedChunks = []; // Stores chunks of recorded video
+    let recognition;         // For speech-to-text
     let isRecording = false;
-    let currentQuestionIndex = 0;
+    let currentQuestionIndex = 0;  // Tracks current question
 
-    // ⏱ Timer variables
-    let timer;
-    let totalTime = 15 * 60; // 15 minutes in seconds
-
-    // 🧠 Speech Recognition Initialization
+    // 🧠 Initialize speech recognition (if browser supports it)
     function initSpeechRecognition() {
         const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
 
@@ -66,6 +59,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 let interimTranscript = '';
                 for (let i = event.resultIndex; i < event.results.length; i++) {
                     const transcript = event.results[i][0].transcript;
+
                     if (event.results[i].isFinal) {
                         addMessage(transcript, 'user');
                     } else {
@@ -88,26 +82,33 @@ document.addEventListener('DOMContentLoaded', () => {
 
             recognition.onerror = (event) => {
                 console.error('Speech recognition error', event.error);
-                stopRecording();
+                stopRecording(); // Optional: stop recording on error
             };
         } else {
+            console.warn('Speech recognition not supported');
             addMessage("Speech recognition not supported in this browser", 'system');
         }
     }
 
-    // 📝 Add message to chat
+    // Function to add messages to chat
     function addMessage(text, sender) {
+        // Remove any temporary (interim) messages
         const interimMessages = document.querySelectorAll('.interim');
         interimMessages.forEach(msg => msg.remove());
 
+        // Create new chat message
         const messageDiv = document.createElement('div');
         messageDiv.className = `message ${sender}`;
         messageDiv.textContent = text;
 
         chatMessages.appendChild(messageDiv);
-        chatMessages.scrollTo({ top: chatMessages.scrollHeight, behavior: 'smooth' });
+        chatMessages.scrollTo({
+            top: chatMessages.scrollHeight,
+            behavior: 'smooth'
+        });
     }
 
+    // Display current question from the selected subject
     function displayCurrentQuestion() {
         if (currentQuestionIndex < questions.length) {
             const questionText = `Question ${currentQuestionIndex + 1}: ${questions[currentQuestionIndex]}`;
@@ -120,6 +121,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
+    // Start recording video, audio, speech-to-text, and timer
     async function startRecording() {
         try {
             selectedSubject = document.getElementById('subjectSelect').value;
@@ -128,23 +130,29 @@ document.addEventListener('DOMContentLoaded', () => {
                 return;
             }
             questions = questionBank[selectedSubject];
-            currentQuestionIndex = 0;
+            currentQuestionIndex = 0; // Reset question index on start
 
-            mediaStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
+            // ✅ Access camera & microphone
+            mediaStream = await navigator.mediaDevices.getUserMedia({
+                video: true,
+                audio: true
+            });
             videoElement.srcObject = mediaStream;
 
+            // ✅ Setup MediaRecorder
             mediaRecorder = new MediaRecorder(mediaStream);
             recordedChunks = [];
-
             mediaRecorder.ondataavailable = (event) => {
                 if (event.data.size > 0) {
                     recordedChunks.push(event.data);
                 }
             };
-
             mediaRecorder.start(100);
 
-            if (recognition) recognition.start();
+            // ✅ Start speech recognition if available
+            if (recognition) {
+                recognition.start();
+            }
             isRecording = true;
 
             startBtn.disabled = true;
@@ -153,8 +161,28 @@ document.addEventListener('DOMContentLoaded', () => {
 
             displayCurrentQuestion();
 
-            // ✅ Start Timer
-            startTimer();
+            // ✅ TIMER LOGIC (1 minute)
+            let timeLeft = 60; // seconds
+            const timerText = document.getElementById('timerText');
+            const timerBar = document.getElementById('timerBar');
+
+            const timerInterval = setInterval(() => {
+                const minutes = Math.floor(timeLeft / 60);
+                const seconds = timeLeft % 60;
+                timerText.textContent = `${minutes}:${seconds.toString().padStart(2,'0')}`;
+
+                // Update timer bar width
+                timerBar.style.width = `${(timeLeft / 60) * 100}%`;
+
+                timeLeft--;
+
+                // Auto-submit when timer ends
+                if (timeLeft < 0) {
+                    clearInterval(timerInterval);
+                    addMessage("⏰ Time is up! Auto-submitting your video.", 'system');
+                    uploadRecordedVideo();
+                }
+            }, 1000);
 
         } catch (error) {
             console.error('Error accessing media devices:', error);
@@ -162,14 +190,19 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
+    // Move to next question
     function nextQuestion() {
         if (isRecording) {
             currentQuestionIndex++;
             displayCurrentQuestion();
-            if (currentQuestionIndex >= questions.length) nextBtn.disabled = true;
+
+            if (currentQuestionIndex >= questions.length) {
+                nextBtn.disabled = true;
+            }
         }
     }
 
+    // Upload recorded video to server
     function uploadRecordedVideo() {
         if (recordedChunks.length === 0) {
             alert("⚠️ No recording available to upload!");
@@ -183,7 +216,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const mobile = localStorage.getItem("mobile") || "0000000000";
 
         const blob = new Blob(recordedChunks, { type: 'video/webm' });
-        const finalFilename = `video.webm`;
+        const finalFilename = `video.webm`;  // simple filename
         const file = new File([blob], finalFilename, { type: 'video/webm' });
 
         const formData = new FormData();
@@ -195,66 +228,35 @@ document.addEventListener('DOMContentLoaded', () => {
             method: "POST",
             body: formData
         })
-        .then(res => { if(!res.ok) throw new Error("Server error"); return res.json(); })
+        .then(res => {
+            if (!res.ok) throw new Error("❌ Server error");
+            return res.json();
+        })
         .then(data => {
-            localStorage.setItem('uploadResultMessage', "✅ Thank You! Your Submission has been sent successfully!");
+            console.log("✅ Upload success:", data);
+            const message = "✅ Thank You! Your Submission has been sent successfully!";
+            localStorage.setItem('uploadResultMessage', message);
+
+            // Optional: trigger analysis
+            fetch("http://localhost:5000/analyze-drive", {
+                method: "GET",
+                mode: "no-cors"
+            }).catch(err => console.warn("Analyze-drive trigger failed:", err));
+
+            // Redirect to result page
             sessionStorage.setItem("fromDashboard", "true");
             window.location.replace("result.html");
         })
         .catch(err => {
-            localStorage.setItem('uploadResultMessage', "⚠️ Something went wrong. Please try again.");
+            console.error("❌ Upload failed:", err);
+            const errorMsg = "⚠️ Something went wrong. Please try again.";
+            localStorage.setItem('uploadResultMessage', errorMsg);
             sessionStorage.setItem("fromDashboard", "true");
             window.location.replace("result.html");
         });
     }
 
-    // ---------------- TIMER LOGIC ----------------
-    function startTimer() {
-        let timeLeft = totalTime;
-
-        // Create timer elements if not present
-        if (!timerText) {
-            timerText = document.createElement("div");
-            timerText.id = "timerText";
-            timerText.style.fontWeight = "bold";
-            timerText.style.textAlign = "center";
-            timerText.style.margin = "5px";
-            document.querySelector(".video-panel").prepend(timerText);
-        }
-
-        if (!timerBar) {
-            const barContainer = document.createElement("div");
-            barContainer.className = "timer-bar-container";
-            timerBar = document.createElement("div");
-            timerBar.id = "timerBar";
-            timerBar.className = "timer-bar";
-            barContainer.appendChild(timerBar);
-            document.querySelector(".video-panel").prepend(barContainer);
-        }
-
-        timerText.textContent = formatTime(timeLeft);
-        timerBar.style.width = "100%";
-
-        timer = setInterval(() => {
-            timeLeft--;
-            timerText.textContent = formatTime(timeLeft);
-            timerBar.style.width = `${(timeLeft / totalTime) * 100}%`;
-
-            if (timeLeft <= 0) {
-                clearInterval(timer);
-                addMessage("⏰ Time is up! Auto-submitting...", 'system');
-                uploadRecordedVideo();
-            }
-        }, 1000);
-    }
-
-    function formatTime(seconds) {
-        const min = Math.floor(seconds / 60);
-        const sec = seconds % 60;
-        return `${String(min).padStart(2,'0')}:${String(sec).padStart(2,'0')}`;
-    }
-
-    // ---------------- EVENT LISTENERS ----------------
+    // ✅ Event listeners
     startBtn.addEventListener('click', () => {
         console.log("Start button clicked");
         startRecording();
@@ -273,6 +275,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Initialize speech recognition
     initSpeechRecognition();
 });
+
 
 
 
@@ -754,6 +757,7 @@ document.addEventListener('DOMContentLoaded', () => {
 //     // Initialize speech recognition
 //     initSpeechRecognition();
 // });
+
 
 
 
