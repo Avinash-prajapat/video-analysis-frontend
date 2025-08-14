@@ -47,7 +47,7 @@ body {
 #userVideo {
     width: 100%;
     height: 100%;
-    object-fit: cover; /* ✅ Video auto-fit without distortion */
+    object-fit: cover;
 }
 
 /* 🕹️ Sticky Controls (Buttons) */
@@ -76,14 +76,8 @@ body {
     min-width: 100px;
 }
 
-/* ✅ Start Button (Green) */
 #startBtn { background: #25D366; color: white; }
-/* ❌ Stop Button (Red) */
-#stopBtn { background: #FF3B30; color: white; }
-/* 📤 Submit Button (Teal) */
 #submitBtn { background: #128C7E; color: white; }
-
-/* 🚫 Disabled Button Look */
 .controls button:disabled {
     background: #ddd;
     color: #888;
@@ -101,7 +95,6 @@ body {
     overflow: hidden;
 }
 
-/* Chat Header */
 .chat-header {
     display: flex;
     justify-content: center;
@@ -113,7 +106,6 @@ body {
     font-size: 18px;
 }
 
-/* Messages Area */
 .chat-messages {
     flex: 1;
     padding: 15px;
@@ -125,17 +117,14 @@ body {
     background-image: url('https://web.whatsapp.com/img/bg-chat-tile-light_a4be512e7195b6b733d9110b408f075d.png');
 }
 
-/* Scrollbar */
 .chat-messages::-webkit-scrollbar { width: 6px; }
 .chat-messages::-webkit-scrollbar-thumb { background: #888; border-radius: 5px; }
 .chat-messages::-webkit-scrollbar-thumb:hover { background: #555; }
 
-/* Chat Bubbles */
 .message { max-width: 70%; padding: 8px 12px; border-radius: 7.5px; word-wrap: break-word; }
 .user { background: #DCF8C6; align-self: flex-start; }
 .system { background: white; align-self: flex-end; }
 
-/* Question Area */
 .question-display {
     padding: 12px;
     background: #f0f2f5;
@@ -144,7 +133,6 @@ body {
     text-align: center;
 }
 
-/* 🔔 Note Text */
 .note {
     color: #d9534f;
     font-weight: bold;
@@ -153,10 +141,38 @@ body {
     margin: 8px;
 }
 
+/* Timer Display */
+.timer-display {
+    font-weight: bold;
+    font-size: 18px;
+    color: #d9534f;
+    text-align: center;
+    margin: 10px 0;
+    position: relative;
+}
+
+/* Timer Progress Bar */
+.timer-bar-container {
+    width: 90%;
+    height: 20px;
+    background-color: #ddd;
+    border-radius: 10px;
+    margin: 0 auto 10px auto;
+    overflow: hidden;
+}
+
+.timer-bar {
+    height: 100%;
+    background-color: #d9534f;
+    width: 100%;
+    transition: width 1s linear;
+    border-radius: 10px 0 0 10px;
+}
+
 /* 📱 RESPONSIVE DESIGN */
 @media (max-width: 768px) {
     .app-container {
-        flex-direction: column; /* ✅ Stack video & chat vertically on small screens */
+        flex-direction: column;
         height: 100vh;
     }
     .video-panel, .chat-container {
@@ -164,22 +180,9 @@ body {
         height: 50%;
     }
     .controls {
-        position: fixed; /* ✅ Keep buttons visible */
+        position: fixed;
         bottom: 0;
         left: 0;
         right: 0;
     }
 }
-#result {
-    height: 40px; /* ✅ Fixed height to prevent layout shift */
-    text-align: center;
-    font-weight: bold;
-    color: green;
-    padding: 5px;
-    background: #f8f9fa;
-    border-top: 1px solid #ddd;
-    overflow: hidden; /* ✅ Extra text hidden */
-    text-overflow: ellipsis; /* ✅ Show "..." if long */
-    white-space: nowrap; /* ✅ Keep text in one line */
-}
-
