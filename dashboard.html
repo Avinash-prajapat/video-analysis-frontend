@@ -1,37 +1,32 @@
 <!DOCTYPE html>
-<!-- HTML5 doctype declaration -->
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <!-- Ensures proper character rendering -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- Makes layout responsive on mobile devices -->
-    
     <title>Video Analysis Chat</title>
-    <!-- Title shown in browser tab -->
-
     <link rel="stylesheet" href="dashboard.css">
-    <!-- Link to external CSS file for styling -->
 </head>
 <body>
 
-    <!-- Main container for the entire app layout -->
-    <div class="app-container">
+<div class="app-container">
 
-        <!-- 🎥 Left side: Video recording and controls -->
-        <div class="video-panel">
+    <!-- 🎥 Left side: Video & Controls -->
+    <div class="video-panel">
+        <div class="video-container">
+            <video id="userVideo" autoplay muted></video>
+        </div>
 
-            <!-- Area where user's video will be displayed -->
-            <div class="video-container">
-                
-                <video id="userVideo" autoplay muted></video>
-                <!-- 'autoplay' starts video automatically, 'muted' disables audio preview -->
+        <!-- Timer Display -->
+        <div class="timer-display">
+            ⏰ Time Remaining: <span id="timerText">15:00</span>
+            <div class="timer-bar-container">
+                <div class="timer-bar" id="timerBar"></div>
             </div>
-            <!-- Buttons for user control -->
-            <div class="controls">
-                <div class="subject-container">
-                    <label for="subjectSelector"><strong>Choose only one Subject:</strong></label>
-                <!-- 🔽 Subject dropdown -->
+        </div>
+
+        <div class="controls">
+            <div class="subject-container">
+                <label for="subjectSelect"><strong>Choose Subject:</strong></label>
                 <select id="subjectSelect">
                     <option value="">-- Select Subject --</option>
                     <option value="ml">Machine Learning</option>
@@ -40,51 +35,34 @@
                     <option value="cn">Computer Networks</option>
                     <option value="dbms">DBMS</option>
                 </select>
-                </div>
-
-                <button id="startBtn">Start</button>
-                <!-- Starts recording or video stream -->
-                <button id="nextBtn" disabled>Next</button>
-                <!-- Optional for multiple questions (disabled initially) -->
-                <button id="submitBtn">Submit</button>
-                <!-- Submits recorded video to backend -->
             </div>
-            
-            <!-- Displays backend result (e.g., emotion analysis) -->
-            <div id="result"></div>
+
+            <button id="startBtn">Start</button>
+            <button id="nextBtn" disabled>Next</button>
+            <button id="submitBtn">Submit</button>
         </div>
 
-        <!-- 💬 Right side: Chat-style interface -->
-        <div class="chat-container">
-            <div class="chat-header">AI Interview Assistant</div>
-            <!-- Title for chat interface -->
-
-            <div class="chat-messages" id="chatMessages">
-                <!-- Where chat-like messages will appear -->
-                <div class="note">
-                    🎧 Note: Please use headphones for best audio clarity during the interview.
-                </div>
-                <div class="message system">
-                     System is ready. To begin, please select your subject, then click Start.
-                </div>
-
-            </div>
-
-            <!-- Current question display area -->
-            <div class="question-display" id="currentQuestion">
-                <!-- JS will dynamically update this with the current question -->
-            </div>
-        </div>
+        <div id="result"></div>
     </div>
 
-    <!-- Link to JavaScript that controls video + chat logic -->
-    <script src="dashboard.js"></script>
-    <!--   <script src="window-control.js"></script> -->
+    <!-- 💬 Right side: Chat -->
+    <div class="chat-container">
+        <div class="chat-header">AI Interview Assistant</div>
+        <div class="chat-messages" id="chatMessages">
+            <div class="note">
+                🎧 Note: Please use headphones for best audio clarity during the interview.
+            </div>
+            <div class="message system">
+                 System is ready. To begin, please select your subject, then click Start.
+            </div>
+        </div>
 
+        <div class="question-display" id="currentQuestion">
+            <!-- JS will update the current question here -->
+        </div>
+    </div>
+</div>
+
+<script src="dashboard.js"></script>
 </body>
 </html>
-
-
-
-
-
