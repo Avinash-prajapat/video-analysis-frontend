@@ -77,12 +77,12 @@
   </div>
 
   <script>
-    // ✅ Only allow if came from dashboard
+    // Only allow if came from dashboard
     if (!sessionStorage.getItem("fromDashboard")) {
         window.location.replace("index.html");
     }
 
-    // ✅ Back button → index.html
+    // Back button → index.html
     history.pushState(null, "", location.href);
     window.onpopstate = function () {
         window.location.replace("index.html");
@@ -98,6 +98,8 @@
     }
 </script>
 
+
 </body>
 </html>
+
 
