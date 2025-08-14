@@ -1,3 +1,5 @@
+sessionStorage.removeItem("fromIndex");
+
 //  Set total questions & time
 const totalQuestions = 3;  // Total questions
 const totalTime = 1;      // Total time in minutes
@@ -18,4 +20,5 @@ agreeCheck.addEventListener("change", () => {
 agreeBtn.addEventListener("click", () => {
     window.location.href = "dashboard.html";
 });
+
 
