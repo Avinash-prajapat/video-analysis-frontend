@@ -71,33 +71,33 @@
   </div>
 
 <script>
-  // Check if user came from dashboard
+  // Agar dashboard se nahi aaye → index.html
   if (!sessionStorage.getItem("fromDashboard")) {
       window.location.replace("index.html");
   }
 
-  // Display message from localStorage
+  // Display message
   const message = localStorage.getItem('uploadResultMessage');
-  const resultDiv = document.getElementById('resultMessage');
-  resultDiv.textContent = message || "No submission status available.";
+  document.getElementById('resultMessage').textContent = message || "No submission status available.";
 
-  // Replace entire history stack with index.html + result.html
+  // Replace history to prevent back to dashboard/instruction
   window.onload = function() {
-      // Clear sessionStorage to prevent refresh bypass
+      // Clear session flag
       sessionStorage.removeItem("fromDashboard");
 
-      // Replace history: index.html as first entry, result.html as current
-      history.pushState(null, "", "result.html"); // current page
-      history.pushState(null, "", "result.html"); // duplicate to prevent back to previous page
+      // History manipulation:
+      // 1. Replace current entry with index.html → history[0] = index.html
+      history.replaceState(null, null, "index.html");
+      // 2. Push result.html as current → history[1] = result.html
+      history.pushState(null, null, "result.html");
   };
 
-  // Handle back button
+  // Back button → always go to index.html
   window.addEventListener('popstate', function() {
-      // Directly go to index.html
       window.location.replace("index.html");
   });
 
-  // Optional: handle refresh
+  // Refresh handling → remove session flag
   window.addEventListener('beforeunload', function() {
       sessionStorage.removeItem("fromDashboard");
   });
@@ -105,4 +105,3 @@
 
 </body>
 </html>
-
