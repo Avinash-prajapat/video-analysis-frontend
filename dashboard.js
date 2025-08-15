@@ -26,6 +26,21 @@ document.addEventListener('DOMContentLoaded', () => {
     // 🔹 BACK & REFRESH HANDLING END 🔹
 });
 
+// 🔹 Custom Alert Elements 🔹
+const customAlert = document.getElementById('customAlert');
+const alertMessage = document.getElementById('alertMessage');
+const alertOkBtn = document.getElementById('alertOkBtn');
+
+// 🔹 Function to show alert 🔹
+function showAlert(message) {
+    alertMessage.textContent = message; // Set message
+    customAlert.style.display = 'flex'; // Show modal
+}
+
+// 🔹 OK button hides the alert 🔹
+alertOkBtn.addEventListener('click', () => {
+    customAlert.style.display = 'none';
+});
 
 document.addEventListener('DOMContentLoaded', () => {
     // 🎯 DOM Elements: Fetching elements after DOM is fully loaded
@@ -155,7 +170,7 @@ document.addEventListener('DOMContentLoaded', () => {
         try {
             selectedSubject = document.getElementById('subjectSelect').value;
             if (!selectedSubject) {
-                alert("⚠️ Please select a subject before starting!");
+                showAlert("⚠️ Please select a subject before starting!");
                 return;
             }
             questions = questionBank[selectedSubject];
@@ -234,7 +249,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Upload recorded video to server
     function uploadRecordedVideo() {
         if (recordedChunks.length === 0) {
-            alert("⚠️ No recording available to upload!");
+            showAlert("⚠️ No recording available to upload!");
             return;
         }
 
@@ -786,6 +801,7 @@ document.addEventListener('DOMContentLoaded', () => {
 //     // Initialize speech recognition
 //     initSpeechRecognition();
 // });
+
 
 
 
