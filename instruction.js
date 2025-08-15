@@ -47,5 +47,7 @@ agreeBtn.addEventListener("click", () => {
     sessionStorage.setItem("fromInstruction", "true");
 
     // Redirect to dashboard
-    window.location.href = "dashboard.html";
+    //window.location.href = "dashboard.html";
+    window.location.replace("dashboard.html");
 });
+
