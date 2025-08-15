@@ -70,34 +70,39 @@
     <div id="resultMessage">Loading...</div>
   </div>
 
-  <script>
-    // Only allow entry if coming from dashboard
-    if (!sessionStorage.getItem("fromDashboard")) {
-        window.location.replace("index.html");
-    }
+<script>
+  // Check if user came from dashboard
+  if (!sessionStorage.getItem("fromDashboard")) {
+      window.location.replace("index.html");
+  }
 
-    // Display message from localStorage
-    const message = localStorage.getItem('uploadResultMessage');
-    const resultDiv = document.getElementById('resultMessage');
-    resultDiv.textContent = message || "No submission status available.";
+  // Display message from localStorage
+  const message = localStorage.getItem('uploadResultMessage');
+  const resultDiv = document.getElementById('resultMessage');
+  resultDiv.textContent = message || "No submission status available.";
 
-    // Clear session to prevent refresh bypass
-    window.onload = function() {
-        sessionStorage.removeItem("fromDashboard");
+  // Replace entire history stack with index.html + result.html
+  window.onload = function() {
+      // Clear sessionStorage to prevent refresh bypass
+      sessionStorage.removeItem("fromDashboard");
 
-        // Replace history state so back button doesn't go to previous page
-        history.replaceState(null, "", "result.html");
-    };
+      // Replace history: index.html as first entry, result.html as current
+      history.pushState(null, "", "result.html"); // current page
+      history.pushState(null, "", "result.html"); // duplicate to prevent back to previous page
+  };
 
-    // Handle back button
-    window.addEventListener('popstate', function() {
-        window.location.replace("index.html");
-    });
+  // Handle back button
+  window.addEventListener('popstate', function() {
+      // Directly go to index.html
+      window.location.replace("index.html");
+  });
 
-    // Optional: refresh handling
-    window.addEventListener('beforeunload', function() {
-        sessionStorage.removeItem("fromDashboard");
-    });
-  </script>
+  // Optional: handle refresh
+  window.addEventListener('beforeunload', function() {
+      sessionStorage.removeItem("fromDashboard");
+  });
+</script>
+
 </body>
 </html>
+
