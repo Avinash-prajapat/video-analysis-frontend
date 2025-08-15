@@ -1,21 +1,14 @@
-// Clear previous instruction flag
-sessionStorage.removeItem("fromInstruction");
-
 document.addEventListener('DOMContentLoaded', () => {
-    // ... (aapka existing code baki hai, jaise aapne bheja hai)
-
     // 🔹 BACK & REFRESH HANDLING START 🔹
 
     // Agar user page refresh kare ya direct access kare
     if (!sessionStorage.getItem("fromInstruction")) {
-        // User ko index.html par bhej do
         window.location.replace("index.html");
     }
 
     // On load, set current page as fromInstruction
     window.onload = function() {
         sessionStorage.setItem("fromInstruction", "true");
-
         // Replace history to prevent back to previous pages
         history.replaceState(null, null, "dashboard.html");
     };
@@ -32,6 +25,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // 🔹 BACK & REFRESH HANDLING END 🔹
 });
+
 
 document.addEventListener('DOMContentLoaded', () => {
     // 🎯 DOM Elements: Fetching elements after DOM is fully loaded
@@ -792,6 +786,7 @@ document.addEventListener('DOMContentLoaded', () => {
 //     // Initialize speech recognition
 //     initSpeechRecognition();
 // });
+
 
 
 
