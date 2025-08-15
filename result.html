@@ -1,40 +1,105 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Result Page</title>
-    <script>
-        // Page load hone se pehle check karo
-        if (!sessionStorage.getItem("fromDashboard")) {
-            // Agar dashboard se nahi aaye, index.html par redirect
-            window.location.replace("index.html");
-        }
+  <meta charset="UTF-8" />
+  <title>Submission Result</title>
+  <style>
+    body {
+      margin: 0;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #00c9ff, #92fe9d);
+      color: #333;
+    }
 
-        // Page load hone par sessionStorage clear kar do
-        window.onload = function() {
-            sessionStorage.removeItem("fromDashboard");
+    .result-container {
+      background: white;
+      padding: 40px 50px;
+      border-radius: 12px;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+      max-width: 450px;
+      text-align: center;
+    }
 
-            // History me result.html ko replace karo (optional, safety ke liye)
-            history.replaceState(null, null, "result.html");
-        };
+    h1 {
+      margin-bottom: 30px;
+      color: #128C7E;
+      font-weight: 700;
+      font-size: 28px;
+    }
 
-        // Back button handle karna
-        window.addEventListener('popstate', function(event) {
-            // Agar back button dabaya gaya to direct index.html par bhejo
-            window.location.replace("index.html");
-        });
+    #resultMessage {
+      font-size: 20px;
+      color: #1a5e4d;
+      margin-bottom: 35px;
+      white-space: pre-wrap;
+      font-weight: 600;
+    }
 
-        // Optional: agar user refresh kare to bhi index.html par redirect
-        window.addEventListener('beforeunload', function(e) {
-            // Kuch browsers me ye kaam karega
-            sessionStorage.removeItem("fromDashboard");
-        });
-    </script>
+    button {
+      background-color: #128C7E;
+      border: none;
+      padding: 14px 40px;
+      color: white;
+      font-size: 18px;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+      font-weight: 600;
+    }
+
+    button:hover {
+      background-color: #0b665a;
+    }
+
+    @media (max-width: 500px) {
+      .result-container {
+        width: 90%;
+        padding: 30px 20px;
+      }
+      #resultMessage {
+        font-size: 18px;
+      }
+      button {
+        width: 100%;
+        padding: 14px 0;
+      }
+    }
+  </style>
+  <script>
+    // Page load hone se pehle check karo
+    if (!sessionStorage.getItem("fromDashboard")) {
+        // Agar dashboard se nahi aaye, index.html par redirect
+        window.location.replace("index.html");
+    }
+
+    // Page load hone par sessionStorage clear kar do
+    window.onload = function() {
+        sessionStorage.removeItem("fromDashboard");
+
+        // History me result.html ko replace karo, taki back button dashboard ya instruction par na jaye
+        history.replaceState(null, null, "result.html");
+    };
+
+    // Back button handle karna
+    window.addEventListener('popstate', function(event) {
+        // Agar back button dabaya gaya to direct index.html par bhejo
+        window.location.replace("index.html");
+    });
+
+    // Optional: agar user refresh kare to bhi index.html par redirect
+    window.addEventListener('beforeunload', function(e) {
+        sessionStorage.removeItem("fromDashboard");
+    });
+  </script>
 </head>
 <body>
-    <h1>Yeh hai Result Page</h1>
-    <p>Aapka result yaha dikhaya jayega.</p>
+  <div class="result-container">
+    <h1>Submission Result</h1>
+    <div id="resultMessage">Loading...</div>
+  </div>
 </body>
 </html>
