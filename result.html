@@ -14,7 +14,6 @@
       background: linear-gradient(135deg, #00c9ff, #92fe9d);
       color: #333;
     }
-
     .result-container {
       background: white;
       padding: 40px 50px;
@@ -23,14 +22,12 @@
       max-width: 450px;
       text-align: center;
     }
-
     h1 {
       margin-bottom: 30px;
       color: #128C7E;
       font-weight: 700;
       font-size: 28px;
     }
-
     #resultMessage {
       font-size: 20px;
       color: #1a5e4d;
@@ -38,7 +35,6 @@
       white-space: pre-wrap;
       font-weight: 600;
     }
-
     button {
       background-color: #128C7E;
       border: none;
@@ -50,11 +46,9 @@
       transition: background-color 0.3s ease;
       font-weight: 600;
     }
-
     button:hover {
       background-color: #0b665a;
     }
-
     @media (max-width: 500px) {
       .result-container {
         width: 90%;
@@ -69,37 +63,41 @@
       }
     }
   </style>
-  <script>
-    // Page load hone se pehle check karo
-    if (!sessionStorage.getItem("fromDashboard")) {
-        // Agar dashboard se nahi aaye, index.html par redirect
-        window.location.replace("index.html");
-    }
-
-    // Page load hone par sessionStorage clear kar do
-    window.onload = function() {
-        sessionStorage.removeItem("fromDashboard");
-
-        // History me result.html ko replace karo, taki back button dashboard ya instruction par na jaye
-        history.replaceState(null, null, "result.html");
-    };
-
-    // Back button handle karna
-    window.addEventListener('popstate', function(event) {
-        // Agar back button dabaya gaya to direct index.html par bhejo
-        window.location.replace("index.html");
-    });
-
-    // Optional: agar user refresh kare to bhi index.html par redirect
-    window.addEventListener('beforeunload', function(e) {
-        sessionStorage.removeItem("fromDashboard");
-    });
-  </script>
 </head>
 <body>
   <div class="result-container">
     <h1>Submission Result</h1>
     <div id="resultMessage">Loading...</div>
   </div>
+
+  <script>
+    // Only allow entry if coming from dashboard
+    if (!sessionStorage.getItem("fromDashboard")) {
+        window.location.replace("index.html");
+    }
+
+    // Display message from localStorage
+    const message = localStorage.getItem('uploadResultMessage');
+    const resultDiv = document.getElementById('resultMessage');
+    resultDiv.textContent = message || "No submission status available.";
+
+    // Clear session to prevent refresh bypass
+    window.onload = function() {
+        sessionStorage.removeItem("fromDashboard");
+
+        // Replace history state so back button doesn't go to previous page
+        history.replaceState(null, "", "result.html");
+    };
+
+    // Handle back button
+    window.addEventListener('popstate', function() {
+        window.location.replace("index.html");
+    });
+
+    // Optional: refresh handling
+    window.addEventListener('beforeunload', function() {
+        sessionStorage.removeItem("fromDashboard");
+    });
+  </script>
 </body>
 </html>
