@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // 🔹 BACK & REFRESH HANDLING START 🔹
+    //  BACK & REFRESH HANDLING START 
 
     // Agar user page refresh kare ya direct access kare
     if (!sessionStorage.getItem("fromInstruction")) {
@@ -23,27 +23,27 @@ document.addEventListener('DOMContentLoaded', () => {
         sessionStorage.removeItem("fromInstruction");
     });
 
-    // 🔹 BACK & REFRESH HANDLING END 🔹
+    //  BACK & REFRESH HANDLING END 
 });
 
-// 🔹 Custom Alert Elements 🔹
+//  Custom Alert Elements 
 const customAlert = document.getElementById('customAlert');
 const alertMessage = document.getElementById('alertMessage');
 const alertOkBtn = document.getElementById('alertOkBtn');
 
-// 🔹 Function to show alert 🔹
+//  Function to show alert 
 function showAlert(message) {
     alertMessage.textContent = message; // Set message
     customAlert.style.display = 'flex'; // Show modal
 }
 
-// 🔹 OK button hides the alert 🔹
+//  OK button hides the alert 
 alertOkBtn.addEventListener('click', () => {
     customAlert.style.display = 'none';
 });
 
 document.addEventListener('DOMContentLoaded', () => {
-    // 🎯 DOM Elements: Fetching elements after DOM is fully loaded
+    //  DOM Elements: Fetching elements after DOM is fully loaded
     const videoElement = document.getElementById('userVideo');
     const startBtn = document.getElementById('startBtn');
     const nextBtn = document.getElementById('nextBtn');
@@ -90,7 +90,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let isRecording = false;
     let currentQuestionIndex = 0;  // Tracks current question
 
-    // 🧠 Initialize speech recognition (if browser supports it)
+    //  Initialize speech recognition (if browser supports it)
     function initSpeechRecognition() {
         const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
 
@@ -176,14 +176,14 @@ document.addEventListener('DOMContentLoaded', () => {
             questions = questionBank[selectedSubject];
             currentQuestionIndex = 0; // Reset question index on start
 
-            // ✅ Access camera & microphone
+            //  Access camera & microphone
             mediaStream = await navigator.mediaDevices.getUserMedia({
                 video: true,
                 audio: true
             });
             videoElement.srcObject = mediaStream;
 
-            // ✅ Setup MediaRecorder
+            //  Setup MediaRecorder
             mediaRecorder = new MediaRecorder(mediaStream);
             recordedChunks = [];
             mediaRecorder.ondataavailable = (event) => {
@@ -193,7 +193,7 @@ document.addEventListener('DOMContentLoaded', () => {
             };
             mediaRecorder.start(100);
 
-            // ✅ Start speech recognition if available
+            //  Start speech recognition if available
             if (recognition) {
                 recognition.start();
             }
@@ -205,7 +205,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             displayCurrentQuestion();
 
-            // ✅ TIMER LOGIC (1 minute)
+            //  TIMER LOGIC (1 minute)
             let timeLeft = 60; // seconds
             const timerText = document.getElementById('timerText');
             const timerBar = document.getElementById('timerBar');
@@ -300,7 +300,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // ✅ Event listeners
+    // Event listeners
     startBtn.addEventListener('click', () => {
         console.log("Start button clicked");
         startRecording();
@@ -801,6 +801,7 @@ document.addEventListener('DOMContentLoaded', () => {
 //     // Initialize speech recognition
 //     initSpeechRecognition();
 // });
+
 
 
 
