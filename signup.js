@@ -18,7 +18,7 @@ document.getElementById('signupForm').addEventListener('submit', function(e) {
     signupBtn.style.cursor = "not-allowed";    // Change cursor style
 
     // 🌐 Send signup data to the backend (API call)
-    fetch('http://10.187.13.251:5000/signup', {
+    fetch('https://video-analysis-backend-2l85.onrender.com/signup', {
         method: 'POST',  // Use POST request
         headers: { 'Content-Type': 'application/json' }, // Send JSON data
         body: JSON.stringify({ name, mobile, username, password }) // Convert form data to JSON
@@ -62,3 +62,4 @@ document.getElementById('togglePassword').addEventListener('click', function() {
     // If input type is "password", change to "text", otherwise back to "password"
     passwordField.type = passwordField.type === 'password' ? 'text' : 'password';
 });
+
