@@ -170,7 +170,7 @@
 //         try {
 //             selectedSubject = document.getElementById('subjectSelect').value;
 //             if (!selectedSubject) {
-//                 showAlert("⚠️ Please select a subject before starting!");
+//                 showAlert("⚠ Please select a subject before starting!");
 //                 return;
 //             }
 //             questions = questionBank[selectedSubject];
@@ -223,7 +223,7 @@
 //                 // Auto-submit when timer ends
 //                 if (timeLeft < 0) {
 //                     clearInterval(timerInterval);
-//                     addMessage("⏰ Time is up! Auto-submitting your video.", 'system');
+//                     addMessage(" Time is up! Auto-submitting your video.", 'system');
 //                     uploadRecordedVideo();
 //                 }
 //             }, 1000);
@@ -249,7 +249,7 @@
 //     // Upload recorded video to server
 //     function uploadRecordedVideo() {
 //         if (recordedChunks.length === 0) {
-//             showAlert("⚠️ No recording available to upload!");
+//             showAlert("⚠ No recording available to upload!");
 //             return;
 //         }
 
@@ -273,12 +273,12 @@
 //             body: formData
 //         })
 //         .then(res => {
-//             if (!res.ok) throw new Error("❌ Server error");
+//             if (!res.ok) throw new Error(" Server error");
 //             return res.json();
 //         })
 //         .then(data => {
-//             console.log("✅ Upload success:", data);
-//             const message = "✅ Thank You! Your Submission has been sent successfully!";
+//             console.log(" Upload success:", data);
+//             const message = " Thank You! Your Submission has been sent successfully!";
 //             localStorage.setItem('uploadResultMessage', message);
 
 //             // Optional: trigger analysis
@@ -292,8 +292,8 @@
 //             window.location.replace("result.html");
 //         })
 //         .catch(err => {
-//             console.error("❌ Upload failed:", err);
-//             const errorMsg = "⚠️ Something went wrong. Please try again.";
+//             console.error(" Upload failed:", err);
+//             const errorMsg = "⚠ Something went wrong. Please try again.";
 //             localStorage.setItem('uploadResultMessage', errorMsg);
 //             sessionStorage.setItem("fromDashboard", "true");
 //             window.location.replace("result.html");
@@ -790,6 +790,7 @@ document.addEventListener('DOMContentLoaded', () => {
         // Fetch data from Google Sheets when page loads
         fetchDataFromGoogleSheets();
     });
+
 
 
 
