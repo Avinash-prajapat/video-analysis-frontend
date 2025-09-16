@@ -18,7 +18,9 @@
 
         <!-- Timer Display -->
         <div class="timer-display">
-            ⏰ Time Remaining: <span id="timerText">1:00</span>
+            <span class="status-indicator" id="statusIndicator"></span>
+            ⏰ Time Remaining: <span id="timerText">--:--</span>
+            <div id="timerInfo" class="subject-info">Please select a subject to see timer duration</div>
             <div class="timer-bar-container">
                 <div class="timer-bar" id="timerBar"></div>
             </div>
@@ -28,12 +30,7 @@
             <div class="subject-container">
                 <label for="subjectSelect"><strong>Choose Subject:</strong></label>
                 <select id="subjectSelect">
-                    <option value="">-- Select Subject --</option>
-                    <option value="ml">Machine Learning</option>
-                    <option value="ds">Data Structures</option>
-                    <option value="oops">OOPs</option>
-                    <option value="cn">Computer Networks</option>
-                    <option value="dbms">DBMS</option>
+                    <option value="">-- Loading Subjects --</option>
                 </select>
             </div>
 
@@ -53,7 +50,10 @@
                 🎧 Note: Please use headphones for best audio clarity during the interview.
             </div>
             <div class="message system">
-                 System is ready. To begin, please select your subject, then click Start.
+                 System is ready. Please select a subject to begin.
+            </div>
+            <div class="message system important-note">
+                 ⚡ Important: You can attend only one subject. Please choose carefully.
             </div>
         </div>
 
@@ -70,9 +70,6 @@
     </div>
 </div>
 
-<script src="dashboard.js"></script>
+<link rel="stylesheet" href="dashboard.css">
 </body>
 </html>
-
-
-
