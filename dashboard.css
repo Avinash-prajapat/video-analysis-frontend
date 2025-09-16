@@ -20,7 +20,7 @@
             height: 98%;
             gap: 15px;
             box-sizing: border-box;
-            background: linear-gradient(135deg, #16213e 0%, #1a1a2e 100%);
+            background: rgb(223, 214, 214);
             border-radius: 15px;
             padding: 15px;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
@@ -349,3 +349,4 @@
             background: rgba(255, 204, 0, 0.1);
             border-radius: 6px;
         }
+
