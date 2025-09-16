@@ -334,8 +334,6 @@
 
 
 
-
-
 document.addEventListener('DOMContentLoaded', () => {
         //  BACK & REFRESH HANDLING START 
         if (!sessionStorage.getItem("fromInstruction")) {
@@ -790,21 +788,3 @@ document.addEventListener('DOMContentLoaded', () => {
         // Fetch data from Google Sheets when page loads
         fetchDataFromGoogleSheets();
     });
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
