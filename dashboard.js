@@ -842,10 +842,13 @@ document.addEventListener('DOMContentLoaded', () => {
             const finalFilename = `video.webm`;
             const file = new File([blob], finalFilename, { type: 'video/webm' });
 
-            const formData = new FormData();
-            formData.append("video", file);
-            formData.append("username", username);
-            formData.append("mobile", mobile);
+            // Multiple files upload (NEW)
+              const formData = new FormData();
+              for (let i = 0; i < selectedFiles.length; i++) {
+                  formData.append('videos', selectedFiles[i]);
+              }
+              formData.append('username', username);
+              formData.append('mobile', mobile);
 
             fetch("https://video-analysis-backend-2l85.onrender.com/upload", {
                 method: "POST",
@@ -901,3 +904,4 @@ document.addEventListener('DOMContentLoaded', () => {
         // Fetch data from Google Sheets when page loads
         fetchDataFromGoogleSheets();
     });
+
