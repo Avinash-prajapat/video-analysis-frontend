@@ -865,8 +865,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 return;
             }
 
-            // Stop recording first
-            stopRecording();   
+              
 
             submitBtn.disabled = true;
             submitBtn.textContent = "Submitting...";
@@ -942,6 +941,7 @@ document.addEventListener('DOMContentLoaded', () => {
         // Fetch data from Google Sheets when page loads
         fetchDataFromGoogleSheets();
     });
+
 
 
 
