@@ -565,7 +565,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 };
             } else {
                 console.warn('Speech recognition not supported');
-                addMessage("Speech recognition not supported in this browser", 'system');
+                showAlert("Speech recognition not supported in this browser", 'system');
             }
         }
 
@@ -733,21 +733,21 @@ document.addEventListener('DOMContentLoaded', () => {
                     updateOverviewPanel();
                     
                     startBtn.disabled = false;
-                    addMessage("Click Start to begin the interview.", 'system');
+                    showAlert("Press OK, then Click Start to begin the interview.", 'system');
                 } else {
-                    addMessage("No valid data found from server.", 'system');
+                    
                     showAlert("Error: No data found from server. Please check your configuration.");
                     startBtn.disabled = true;
                 }
                 
                 return true;
             } catch (error) {
-                console.error('Error fetching data from Google Sheets:', error);
+                console.error('Error fetching data from Dataset:', error);
                 
                 const loadingIndicators = document.querySelectorAll('.loading');
                 loadingIndicators.forEach(indicator => indicator.parentElement.remove());
                 
-                addMessage("Server error: Could not fetch data from server.", 'system');
+                
                 showAlert("Server error: Could not fetch data from server. Please check your internet connection and try again.");
                 startBtn.disabled = true;
                 
@@ -802,7 +802,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             } catch (error) {
                 console.error('Error accessing media devices:', error);
-                addMessage("Error accessing camera/microphone", 'system');
+                
                 showAlert("Error accessing camera/microphone. Please allow permissions and try again.");
             }
         }
@@ -942,6 +942,7 @@ document.addEventListener('DOMContentLoaded', () => {
         // Fetch data from Google Sheets when page loads
         fetchDataFromGoogleSheets();
     });
+
 
 
 
