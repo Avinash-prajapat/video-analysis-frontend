@@ -824,6 +824,39 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             }
         }
+       
+
+       // Function to stop recording and cleanup
+        function stopRecording() {
+            try {
+                // Stop media recorder
+                if (mediaRecorder && mediaRecorder.state !== 'inactive') {
+                    mediaRecorder.stop();
+                }
+                
+                // Stop speech recognition
+                if (recognition) {
+                    recognition.stop();
+                }
+                
+                // Stop media stream (camera/microphone)
+                if (mediaStream) {
+                    mediaStream.getTracks().forEach(track => track.stop());
+                }
+                
+                // Clear timers
+                clearInterval(timerInterval);
+                clearInterval(subjectTimerInterval);
+                
+                // Update status
+                isRecording = false;
+                statusIndicator.classList.remove('status-recording');
+                
+                console.log("Recording stopped and cleaned up");
+            } catch (error) {
+                console.error('Error stopping recording:', error);
+            }
+        }
 
         // Upload recorded video to server
         function uploadRecordedVideo() {
@@ -831,6 +864,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 showAlert("⚠️ No recording available to upload!");
                 return;
             }
+
+            // Stop recording first
+            stopRecording();   
 
             submitBtn.disabled = true;
             submitBtn.textContent = "Submitting...";
@@ -869,6 +905,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 // Redirect to result page
                 sessionStorage.setItem("fromDashboard", "true");
                 window.location.replace("result.html");
+
+               showAlert(message);
             })
             .catch(err => {
                 console.error("❌ Upload failed:", err);
@@ -876,6 +914,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 localStorage.setItem('uploadResultMessage', errorMsg);
                 sessionStorage.setItem("fromDashboard", "true");
                 window.location.replace("result.html");
+
+              // Re-enable submit button for retry
+                submitBtn.disabled = false;
+                submitBtn.textContent = "Retry Upload";
+                submitBtn.style.background = "#ff9933";
             });
         }
 
@@ -901,6 +944,7 @@ document.addEventListener('DOMContentLoaded', () => {
         // Fetch data from Google Sheets when page loads
         fetchDataFromGoogleSheets();
     });
+
 
 
 
