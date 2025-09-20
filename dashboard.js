@@ -843,7 +843,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const file = new File([blob], finalFilename, { type: 'video/webm' });
 
             const formData = new FormData();
-            formData.append('video', selectedFile);
+            formData.append('video', file);
             formData.append('username', username);
             formData.append('mobile', mobile);
 
@@ -901,5 +901,6 @@ document.addEventListener('DOMContentLoaded', () => {
         // Fetch data from Google Sheets when page loads
         fetchDataFromGoogleSheets();
     });
+
 
 
