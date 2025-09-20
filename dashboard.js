@@ -911,9 +911,7 @@ document.addEventListener('DOMContentLoaded', () => {
             .catch(err => {
                 console.error("❌ Upload failed:", err);
                 const errorMsg = "⚠️ Something went wrong. Please try again.";
-                localStorage.setItem('uploadResultMessage', errorMsg);
-                sessionStorage.setItem("fromDashboard", "true");
-                window.location.replace("result.html");
+                showAlert(errorMsg);
 
               // Re-enable submit button for retry
                 submitBtn.disabled = false;
@@ -944,6 +942,7 @@ document.addEventListener('DOMContentLoaded', () => {
         // Fetch data from Google Sheets when page loads
         fetchDataFromGoogleSheets();
     });
+
 
 
 
