@@ -610,12 +610,11 @@ document.addEventListener('DOMContentLoaded', () => {
         return;
     }
 
-    // ✅ IMMEDIATELY STOP EVERYTHING
+    // Stop everything
     stopRecording();
     
-    // ✅ INSTANT UI UPDATE
     submitBtn.disabled = true;
-    submitBtn.textContent = "Uploading...";
+    submitBtn.textContent = "Uploading to Cloud...";
     submitBtn.style.background = "#ff9933";
 
     const username = localStorage.getItem("username") || "user";
@@ -627,29 +626,23 @@ document.addEventListener('DOMContentLoaded', () => {
     const finalFilename = `${username}_${mobile}_${Date.now()}.webm`;
     const file = new File([blob], finalFilename, { type: 'video/webm' });
 
-    console.log(`📤 Uploading: ${finalFilename}, Size: ${(blob.size / (1024 * 1024)).toFixed(2)} MB`);
+    const fileSizeMB = (blob.size / (1024 * 1024)).toFixed(2);
+    console.log(`📤 Uploading to Supabase: ${finalFilename}, Size: ${fileSizeMB} MB`);
 
     const formData = new FormData();
     formData.append('video', file);
     formData.append('username', username);
     formData.append('mobile', mobile);
 
-    addMessage("📤 Uploading your interview video...", 'system');
+    addMessage(`📤 Uploading your video to cloud (${fileSizeMB} MB)...`, 'system');
 
     const startTime = Date.now();
     
-    // ✅ FAST UPLOAD WITH TIMEOUT
-    const uploadPromise = fetch("http://localhost:5000/upload", {
+    // ✅ NO TIMEOUT - LET IT TAKE AS LONG AS NEEDED FOR LARGE FILES
+    fetch("http://localhost:5000/upload", {
         method: "POST",
         body: formData
-    });
-
-    // ✅ TIMEOUT FOR SLOW UPLOADS
-    const timeoutPromise = new Promise((_, reject) => {
-        setTimeout(() => reject(new Error("Upload timeout")), 15000);
-    });
-
-    Promise.race([uploadPromise, timeoutPromise])
+    })
     .then(res => {
         if (!res.ok) throw new Error(`Server error: ${res.status}`);
         return res.json();
@@ -658,31 +651,37 @@ document.addEventListener('DOMContentLoaded', () => {
         const uploadTime = Date.now() - startTime;
         console.log(`✅ Upload completed in ${uploadTime}ms`);
         
-        addMessage("✅ Upload successful! Redirecting...", 'system');
-        
-        localStorage.setItem('uploadResultMessage', "✅ Thank You! Your interview has been submitted successfully!");
-        sessionStorage.setItem("fromDashboard", "true");
-
-        // Optional: trigger analysis
-         fetch("http://localhost:5000/analyze-drive", {
-             method: "GET",
-             mode: "no-cors"
-         }).catch(err => console.warn("Analyze-drive trigger failed:", err));
-        
-        // ✅ QUICK REDIRECT
-        setTimeout(() => {
-            window.location.replace("result.html");
-        }, 500);
-        
+        if (data.success) {
+            addMessage("✅ Upload successful! Video saved to cloud.", 'system');
+            
+            localStorage.setItem('uploadResultMessage', "✅ Thank You! Your interview has been submitted successfully to cloud storage!");
+            sessionStorage.setItem("fromDashboard", "true");
+            
+            // Quick redirect
+            setTimeout(() => {
+                window.location.replace("result.html");
+            }, 1000);
+        } else {
+            throw new Error(data.error || "Upload failed");
+        }
     })
     .catch(err => {
         console.error("❌ Upload failed:", err);
         
-        const errorMsg = "⚠️ Upload failed. Please try again.";
+        let errorMsg = "⚠️ Cloud upload failed. ";
+        
+        if (err.message.includes('Supabase') || err.message.includes('cloud')) {
+            errorMsg += "Cloud storage issue. Please try again.";
+        } else if (err.message.includes('timeout')) {
+            errorMsg += "Taking too long. Please check your internet connection.";
+        } else {
+            errorMsg += "Please try again.";
+        }
+        
         showAlert(errorMsg);
-        addMessage("❌ Upload failed. Please try again.", 'system');
+        addMessage("❌ Cloud upload failed. Please try again.", 'system');
 
-        // ✅ ENABLE RETRY
+        // Enable retry
         submitBtn.disabled = false;
         submitBtn.textContent = "Retry Upload";
         submitBtn.style.background = "#ff9933";
@@ -1324,6 +1323,7 @@ document.addEventListener('DOMContentLoaded', () => {
 //         // Fetch data from Google Sheets when page loads
 //         fetchDataFromGoogleSheets();
 //     });
+
 
 
 
