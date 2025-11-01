@@ -882,7 +882,7 @@ document.addEventListener('DOMContentLoaded', () => {
             formData.append('username', username);
             formData.append('mobile', mobile);
 
-            fetch("https://video-analysis-backend-2l85.onrender.com/upload", {
+            fetch("https://copy-video-analysis-backend.onrender.com/upload", {
                 method: "POST",
                 body: formData
             })
@@ -941,6 +941,7 @@ document.addEventListener('DOMContentLoaded', () => {
         // Fetch data from Google Sheets when page loads
         fetchDataFromGoogleSheets();
     });
+
 
 
 
