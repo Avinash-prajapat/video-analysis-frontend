@@ -518,7 +518,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             // ✅ LARGER CHUNKS FOR BETTER PERFORMANCE
             mediaRecorder.start(5000);
-            console.log("🎥 Recording started with optimized settings");
+            console.log("Recording started with optimized settings");
 
             if (recognition) {
                 try {
@@ -537,7 +537,7 @@ document.addEventListener('DOMContentLoaded', () => {
             displayCurrentQuestion();
             startTimer();
 
-            addMessage("🎥 Recording started! Answer each question and click Next when done.", 'system');
+            addMessage("Recording started! Answer each question and click Next when done.", 'system');
 
         } catch (error) {
             console.error('Error starting recording:', error);
@@ -1325,6 +1325,7 @@ document.addEventListener('DOMContentLoaded', () => {
 //         // Fetch data from Google Sheets when page loads
 //         fetchDataFromGoogleSheets();
 //     });
+
 
 
 
