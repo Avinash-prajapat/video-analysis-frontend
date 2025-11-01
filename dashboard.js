@@ -1,22 +1,34 @@
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 document.addEventListener('DOMContentLoaded', () => {
     // BACK & REFRESH HANDLING START 
     if (!sessionStorage.getItem("fromInstruction")) {
         window.location.replace("index.html");
     }
 
-    // On load, set current page as fromInstruction
     window.onload = function() {
         sessionStorage.setItem("fromInstruction", "true");
-        // Replace history to prevent back to previous pages
         history.replaceState(null, null, "dashboard.html");
     };
 
-    // Back button handle karna
     window.addEventListener('popstate', function() {
         window.location.replace("index.html");
     });
 
-    // Optional: refresh handling
     window.addEventListener('beforeunload', function() {
         sessionStorage.removeItem("fromInstruction");
     });
@@ -27,13 +39,11 @@ document.addEventListener('DOMContentLoaded', () => {
     const alertMessage = document.getElementById('alertMessage');
     const alertOkBtn = document.getElementById('alertOkBtn');
 
-    // Function to show alert 
     function showAlert(message) {
         alertMessage.textContent = message;
         customAlert.style.display = 'flex';
     }
 
-    // OK button hides the alert 
     alertOkBtn.addEventListener('click', () => {
         customAlert.style.display = 'none';
     });
@@ -80,22 +90,19 @@ document.addEventListener('DOMContentLoaded', () => {
         const totalSubjects = Object.keys(subjectNames).length;
         const totalQuestions = allQuestions.length;
         
-        // Calculate total time in minutes and seconds
         const minutes = Math.floor(timerDuration / 60);
         const seconds = timerDuration % 60;
         const timeText = minutes > 0 ? `${minutes}m ${seconds}s` : `${seconds}s`;
         
-        // Update overview stats
         overviewTotalSubjects.textContent = totalSubjects;
         overviewTotalQuestions.textContent = totalQuestions;
         overviewTotalTime.textContent = timeText;
         
-        // Clear and populate subjects details
         subjectsDetailsList.innerHTML = '';
         
         for (const [code, name] of Object.entries(subjectNames)) {
             const questionCount = subjectQuestionCounts[code] || 0;
-            const timeLimit = subjectTimers[code] || 300; // Default 5 minutes
+            const timeLimit = subjectTimers[code] || 300;
             const subjectMinutes = Math.floor(timeLimit / 60);
             const subjectSeconds = timeLimit % 60;
             
@@ -116,13 +123,11 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // Function to hide overview and show current subject
     function hideOverviewShowSubject() {
         overviewPanel.style.display = 'none';
         currentSubjectContainer.style.display = 'block';
     }
 
-    // Display current subject and its questions
     function displayCurrentSubject(subjectCode) {
         currentSubjectContainer.innerHTML = '';
         
@@ -130,7 +135,7 @@ document.addEventListener('DOMContentLoaded', () => {
         
         const subjectName = subjectNames[subjectCode] || subjectCode;
         const questionCount = subjectQuestionCounts[subjectCode] || 0;
-        const timeLimit = subjectTimers[subjectCode] || 300; // Default 5 minutes
+        const timeLimit = subjectTimers[subjectCode] || 300;
         const minutes = Math.floor(timeLimit / 60);
         const seconds = timeLimit % 60;
         
@@ -161,21 +166,18 @@ document.addEventListener('DOMContentLoaded', () => {
         
         currentSubjectContainer.appendChild(questionsContainer);
         
-        // Highlight the first question
         const firstQuestion = document.getElementById(`question-${subjectCode}-0`);
         if (firstQuestion) {
             firstQuestion.classList.add('current');
         }
     }
 
-    // Helper function to format time as mm:ss
     function formatTime(seconds) {
         const minutes = Math.floor(seconds / 60);
         const remainingSeconds = seconds % 60;
         return `${minutes}:${remainingSeconds.toString().padStart(2, '0')}`;
     }
 
-    // Update timer color based on remaining time
     function updateTimerColor(percent) {
         if (percent > 50) {
             timerBar.style.background = "linear-gradient(to right, #25D366, #ffcc00)";
@@ -189,7 +191,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // Initialize speech recognition - FIXED VERSION
+    // ✅ IMPROVED SPEECH RECOGNITION
     function initSpeechRecognition() {
         const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
 
@@ -198,19 +200,42 @@ document.addEventListener('DOMContentLoaded', () => {
             recognition.continuous = true;
             recognition.interimResults = true;
             recognition.lang = 'en-US';
+            
+            // ✅ Better configuration to reduce "no-speech" errors
+            recognition.maxAlternatives = 1;
+            
+            let silenceTimeout;
+            let isSpeechActive = false;
+
+            recognition.onstart = () => {
+                console.log("🎤 Speech recognition started");
+                isSpeechActive = true;
+            };
 
             recognition.onresult = (event) => {
+                // Clear silence timeout when speech is detected
+                clearTimeout(silenceTimeout);
+                
                 let interimTranscript = '';
+                let finalTranscript = '';
+
                 for (let i = event.resultIndex; i < event.results.length; i++) {
                     const transcript = event.results[i][0].transcript;
-
+                    
                     if (event.results[i].isFinal) {
-                        addMessage(transcript, 'user');
+                        finalTranscript += transcript;
                     } else {
                         interimTranscript += transcript;
                     }
                 }
 
+                // Add final transcript to chat
+                if (finalTranscript) {
+                    addMessage(finalTranscript, 'user');
+                    console.log("🎤 Speech detected:", finalTranscript);
+                }
+
+                // Handle interim results
                 if (interimTranscript) {
                     const lastMessage = chatMessages.lastChild;
                     if (lastMessage && lastMessage.classList.contains('interim')) {
@@ -221,42 +246,55 @@ document.addEventListener('DOMContentLoaded', () => {
                         interimElement.textContent = interimTranscript;
                         chatMessages.appendChild(interimElement);
                     }
+                    
+                    // Set timeout for silence detection
+                    silenceTimeout = setTimeout(() => {
+                        console.log("🎤 No speech detected for 3 seconds");
+                    }, 3000);
                 }
             };
 
             recognition.onerror = (event) => {
-                console.error('Speech recognition error', event.error);
-                // ❌ STOP RECORDING नहीं करें - सिर्फ error log करें
-                if (event.error === 'not-allowed') {
-                    addMessage("🔇 Microphone permission denied. Video recording will continue.", 'system');
-                } else if (event.error === 'audio-capture') {
-                    addMessage("🎤 No microphone detected. Video recording will continue.", 'system');
+                console.log('🎤 Speech recognition error:', event.error);
+                
+                // ✅ Don't stop recording on "no-speech" errors
+                if (event.error === 'no-speech') {
+                    console.log("🎤 No speech detected - this is normal");
+                    return;
                 }
-                // Recording continue रहेगी
+                
+                if (event.error === 'not-allowed') {
+                    addMessage("🔇 Microphone permission denied. Video recording continues.", 'system');
+                } else if (event.error === 'audio-capture') {
+                    addMessage("🎤 No microphone detected. Video recording continues.", 'system');
+                } else {
+                    console.log("🎤 Other speech recognition error:", event.error);
+                }
             };
 
             recognition.onend = () => {
-                console.log("Speech recognition ended");
-                // Automatically restart recognition if still recording
-                if (isRecording && recognition) {
-                    try {
-                        setTimeout(() => {
+                console.log("🎤 Speech recognition ended");
+                isSpeechActive = false;
+                
+                // Auto-restart only if we're still recording
+                if (isRecording) {
+                    setTimeout(() => {
+                        try {
                             recognition.start();
-                            console.log("Speech recognition restarted");
-                        }, 100);
-                    } catch (e) {
-                        console.log("Could not restart speech recognition:", e);
-                    }
+                            console.log("🎤 Speech recognition restarted");
+                        } catch (e) {
+                            console.log("🎤 Could not restart speech recognition:", e);
+                        }
+                    }, 100);
                 }
             };
 
         } else {
-            console.warn('Speech recognition not supported');
+            console.warn('🎤 Speech recognition not supported');
             addMessage("🗣️ Speech recognition not supported. Video recording will work normally.", 'system');
         }
     }
 
-    // Function to add messages to chat
     function addMessage(text, sender) {
         const interimMessages = document.querySelectorAll('.interim');
         interimMessages.forEach(msg => msg.remove());
@@ -272,7 +310,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Display current question
     function displayCurrentQuestion() {
         if (currentQuestionIndex < allQuestions.length) {
             const currentQ = allQuestions[currentQuestionIndex];
@@ -282,7 +319,7 @@ document.addEventListener('DOMContentLoaded', () => {
             
             if (currentSubjectCode !== currentQ.subject) {
                 currentSubjectCode = currentQ.subject;
-                currentSubjectTime = subjectTimers[currentSubjectCode] || 300; // Default 5 minutes
+                currentSubjectTime = subjectTimers[currentSubjectCode] || 300;
                 subjectStartTime = Date.now();
                 
                 displayCurrentSubject(currentSubjectCode);
@@ -314,21 +351,20 @@ document.addEventListener('DOMContentLoaded', () => {
             nextBtn.disabled = true;
             submitBtn.disabled = false;
             clearInterval(subjectTimerInterval);
+            addMessage("✅ All questions completed! Click Submit to upload your interview.", 'system');
         }
     }
 
-    // Start subject timer - FIXED VERSION
     function startSubjectTimer() {
         clearInterval(subjectTimerInterval);
         
-        // Current subject का time calculate करें
         const currentQ = allQuestions[currentQuestionIndex];
         currentSubjectCode = currentQ.subject;
-        currentSubjectTime = subjectTimers[currentSubjectCode] || 300; // Default 5 minutes
+        currentSubjectTime = subjectTimers[currentSubjectCode] || 300;
         
         let timeLeft = currentSubjectTime;
         
-        console.log(`🕒 Subject timer started: ${currentSubjectCode} for ${timeLeft} seconds`);
+        console.log(`🕒 Subject timer: ${currentSubjectCode} for ${timeLeft} seconds`);
         
         subjectTimerInterval = setInterval(() => {
             if (!isRecording) {
@@ -338,27 +374,21 @@ document.addEventListener('DOMContentLoaded', () => {
             
             timeLeft--;
             
-            // Display subject time in console for debugging
-            if (timeLeft % 30 === 0) {
-                console.log(`🕒 ${currentSubjectCode} time left: ${timeLeft}s`);
-            }
-            
             if (timeLeft <= 0) {
                 clearInterval(subjectTimerInterval);
-                console.log(`🕒 Subject timer ended for ${currentSubjectCode}`);
+                console.log(`🕒 Subject timer ended: ${currentSubjectCode}`);
                 
-                // User को inform करें, लेकिन automatic next नहीं करें
-                addMessage(`⏰ Time for ${subjectNames[currentSubjectCode]} has ended. You can continue to next question when ready.`, 'system');
+                // Inform user but don't auto-next
+                addMessage(`⏰ Time for ${subjectNames[currentSubjectCode]} has ended. Continue when ready.`, 'system');
             }
         }, 1000);
     }
 
-    // Start timer function - FIXED VERSION  
     function startTimer() {
         clearInterval(timerInterval);
         let timeLeft = timerDuration;
         
-        console.log(`⏰ Main timer started: ${timeLeft} seconds total`);
+        console.log(`⏰ Main timer: ${timeLeft} seconds total`);
         
         timerText.textContent = formatTime(timeLeft);
         timerBar.style.width = '100%';
@@ -380,11 +410,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
             timeLeft--;
 
-            // Debug logging
-            if (timeLeft % 60 === 0) {
-                console.log(`⏰ Main timer: ${minutes}:${seconds.toString().padStart(2,'0')} remaining`);
-            }
-
             if (timeLeft < 0) {
                 clearInterval(timerInterval);
                 console.log("⏰ Total time ended - auto submitting");
@@ -394,7 +419,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }, 1000);
     }
 
-    // Fetch data from Google Sheets
     async function fetchDataFromGoogleSheets() {
         try {
             const loadingIndicator = document.createElement('div');
@@ -447,10 +471,7 @@ document.addEventListener('DOMContentLoaded', () => {
             
             if (Object.keys(newQuestionBank).length > 0) {
                 questionBank = newQuestionBank;
-                
-                // Update the overview panel with all subject details
                 updateOverviewPanel();
-                
                 startBtn.disabled = false;
                 showAlert("Press OK, then Click Start to begin the interview.");
             } else {
@@ -460,19 +481,18 @@ document.addEventListener('DOMContentLoaded', () => {
             
             return true;
         } catch (error) {
-            console.error('Error fetching data from Dataset:', error);
+            console.error('Error fetching data:', error);
             
             const loadingIndicators = document.querySelectorAll('.loading');
             loadingIndicators.forEach(indicator => indicator.parentElement.remove());
             
-            showAlert("Server error: Could not fetch data from server. Please check your internet connection and try again.");
+            showAlert("Server error: Could not fetch data. Please check internet connection.");
             startBtn.disabled = true;
             
             return false;
         }
     }
 
-    // Start recording video, audio, speech-to-text, and timer - FIXED VERSION
     async function startRecording() {
         try {
             if (allQuestions.length === 0) {
@@ -481,68 +501,58 @@ document.addEventListener('DOMContentLoaded', () => {
             }
             
             currentQuestionIndex = 0;
-
-            // Hide overview panel and show current subject
             hideOverviewShowSubject();
 
-            // Access camera & microphone with better configuration
+            // Access camera & microphone
             mediaStream = await navigator.mediaDevices.getUserMedia({
                 video: { 
                     width: 1280, 
-                    height: 720 
+                    height: 720,
+                    frameRate: 30
                 },
                 audio: {
                     echoCancellation: true,
                     noiseSuppression: true,
-                    sampleRate: 44100
+                    sampleRate: 44100,
+                    channelCount: 1
                 }
             });
             videoElement.srcObject = mediaStream;
 
-            // Setup MediaRecorder with better configuration
+            // Setup MediaRecorder with optimized settings
             const options = {
                 mimeType: 'video/webm;codecs=vp9,opus',
-                videoBitsPerSecond: 2500000 // 2.5 Mbps
+                videoBitsPerSecond: 1500000 // 1.5 Mbps for better quality
             };
             
             try {
                 mediaRecorder = new MediaRecorder(mediaStream, options);
             } catch (e) {
-                console.log("Trying fallback MIME type");
-                mediaRecorder = new MediaRecorder(mediaStream); // Default MIME type
+                console.log("Using default MediaRecorder");
+                mediaRecorder = new MediaRecorder(mediaStream);
             }
             
             recordedChunks = [];
             mediaRecorder.ondataavailable = (event) => {
                 if (event.data.size > 0) {
                     recordedChunks.push(event.data);
-                    console.log(`Recorded chunk: ${event.data.size} bytes`);
                 }
             };
 
-            mediaRecorder.onstop = () => {
-                console.log("MediaRecorder stopped");
-                console.log(`Total recorded chunks: ${recordedChunks.length}`);
-                console.log(`Total data: ${recordedChunks.reduce((acc, chunk) => acc + chunk.size, 0)} bytes`);
-            };
+            // Start recording with 2-second chunks for better performance
+            mediaRecorder.start(2000);
+            console.log("🎥 Recording started");
 
-            // Start with larger timeslice
-            mediaRecorder.start(1000); // 1 second chunks
-            console.log("MediaRecorder started");
-
-            // Start speech recognition if available
+            // Start speech recognition
             if (recognition) {
                 try {
                     recognition.start();
-                    console.log("Speech recognition started");
                 } catch (e) {
-                    console.log("Speech recognition already started or failed:", e);
+                    console.log("Speech recognition start failed:", e);
                 }
             }
             
             isRecording = true;
-            
-            // Update status indicator
             statusIndicator.classList.add('status-recording');
 
             startBtn.disabled = true;
@@ -551,73 +561,58 @@ document.addEventListener('DOMContentLoaded', () => {
             displayCurrentQuestion();
             startTimer();
 
-            // Success message
-            addMessage("🎥 Recording started successfully! You can now answer the questions.", 'system');
+            addMessage("🎥 Recording started! Answer each question and click Next when done.", 'system');
 
         } catch (error) {
-            console.error('Error accessing media devices:', error);
+            console.error('Error starting recording:', error);
             
             if (error.name === 'NotAllowedError') {
-                showAlert("❌ Camera/microphone permission denied. Please allow permissions and refresh the page.");
-            } else if (error.name === 'NotFoundError') {
-                showAlert("❌ No camera/microphone found. Please check your devices.");
+                showAlert("❌ Camera/microphone permission denied. Please allow permissions.");
             } else {
                 showAlert("❌ Error accessing camera/microphone: " + error.message);
             }
         }
     }
 
-    // Move to next question
     function nextQuestion() {
-        if (isRecording) {
+        if (isRecording && currentQuestionIndex < allQuestions.length - 1) {
             currentQuestionIndex++;
             displayCurrentQuestion();
-
-            if (currentQuestionIndex >= allQuestions.length) {
+            addMessage(`➡️ Moving to question ${currentQuestionIndex + 1}`, 'system');
+            
+            if (currentQuestionIndex >= allQuestions.length - 1) {
                 nextBtn.disabled = true;
                 submitBtn.disabled = false;
-                
-                // Mark all questions as completed
-                document.querySelectorAll('.question-item').forEach(item => {
-                    item.classList.add('completed');
-                });
             }
         }
     }
 
-    // Function to stop recording and cleanup
     function stopRecording() {
         try {
-            // Stop media recorder
             if (mediaRecorder && mediaRecorder.state !== 'inactive') {
                 mediaRecorder.stop();
             }
             
-            // Stop speech recognition
             if (recognition) {
                 recognition.stop();
             }
             
-            // Stop media stream (camera/microphone)
             if (mediaStream) {
                 mediaStream.getTracks().forEach(track => track.stop());
             }
             
-            // Clear timers
             clearInterval(timerInterval);
             clearInterval(subjectTimerInterval);
             
-            // Update status
             isRecording = false;
             statusIndicator.classList.remove('status-recording');
             
-            console.log("Recording stopped and cleaned up");
+            console.log("🛑 Recording stopped");
         } catch (error) {
             console.error('Error stopping recording:', error);
         }
     }
 
-    // Upload recorded video to server
     function uploadRecordedVideo() {
         if (recordedChunks.length === 0) {
             showAlert("⚠️ No recording available to upload!");
@@ -630,6 +625,9 @@ document.addEventListener('DOMContentLoaded', () => {
         const username = localStorage.getItem("username") || "user";
         const mobile = localStorage.getItem("mobile") || "0000000000";
 
+        // Stop recording before upload
+        stopRecording();
+
         const blob = new Blob(recordedChunks, { type: 'video/webm' });
         const finalFilename = `${username}_${mobile}_${Date.now()}.webm`;
         const file = new File([blob], finalFilename, { type: 'video/webm' });
@@ -639,37 +637,29 @@ document.addEventListener('DOMContentLoaded', () => {
         formData.append('username', username);
         formData.append('mobile', mobile);
 
+        console.log(`📤 Uploading video: ${finalFilename}, Size: ${blob.size} bytes`);
+
         fetch("https://copy-video-analysis-backend.onrender.com/upload", {
             method: "POST",
             body: formData
         })
         .then(res => {
-            if (!res.ok) throw new Error("❌ Server error: " + res.status);
+            if (!res.ok) throw new Error(`Server error: ${res.status}`);
             return res.json();
         })
         .then(data => {
             console.log("✅ Upload success:", data);
-            const message = "✅ Thank You! Your Submission has been sent successfully!";
+            const message = "✅ Thank You! Your interview has been submitted successfully!";
             localStorage.setItem('uploadResultMessage', message);
 
-              // Optional: trigger analysis
-            fetch("http://localhost:5000/analyze-drive", {
-                  method: "GET",
-                  mode: "no-cors"
-              }).catch(err => console.warn("Analyze-drive trigger failed:", err));
-
-            // Redirect to result page
             sessionStorage.setItem("fromDashboard", "true");
             window.location.replace("result.html");
-
-            showAlert(message);
         })
         .catch(err => {
             console.error("❌ Upload failed:", err);
-            const errorMsg = "⚠️ Something went wrong. Please try again.";
+            const errorMsg = "⚠️ Upload failed. Please try again.";
             showAlert(errorMsg);
 
-            // Re-enable submit button for retry
             submitBtn.disabled = false;
             submitBtn.textContent = "Retry Upload";
             submitBtn.style.background = "#ff9933";
@@ -677,35 +667,21 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // Event listeners
-    startBtn.addEventListener('click', () => {
-        console.log("Start button clicked");
-        startRecording();
-    });
+    startBtn.addEventListener('click', startRecording);
+    nextBtn.addEventListener('click', nextQuestion);
+    submitBtn.addEventListener('click', uploadRecordedVideo);
 
-    nextBtn.addEventListener('click', () => {
-        console.log("Next button clicked");
-        nextQuestion();
-    });
-
-    submitBtn.addEventListener('click', () => {
-        console.log("Submit button clicked");
-        uploadRecordedVideo();
-    });
-
-    // Initialize speech recognition
+    // Initialize
     initSpeechRecognition();
-    
-    // Fetch data from Google Sheets when page loads
     fetchDataFromGoogleSheets();
 
     // Debug monitoring
     setInterval(() => {
         if (isRecording) {
-            console.log(`🔴 Recording active - Chunks: ${recordedChunks.length}, Total size: ${recordedChunks.reduce((acc, chunk) => acc + chunk.size, 0)} bytes`);
+            console.log(`🔴 Recording - Chunks: ${recordedChunks.length}, Size: ${recordedChunks.reduce((acc, chunk) => acc + chunk.size, 0)} bytes`);
         }
-    }, 10000); // Every 10 seconds
+    }, 15000);
 });
-
 
 
 
@@ -1327,6 +1303,7 @@ document.addEventListener('DOMContentLoaded', () => {
 //         // Fetch data from Google Sheets when page loads
 //         fetchDataFromGoogleSheets();
 //     });
+
 
 
 
