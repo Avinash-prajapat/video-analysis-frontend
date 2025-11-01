@@ -436,9 +436,10 @@ document.addEventListener('DOMContentLoaded', () => {
                     newQuestionBank[subjectCode] = subjectQuestions;
                     subjectQuestionCounts[subjectCode] = subjectQuestions.length;
                     
+                    // ✅ FIXED: Changed 'Code' to 'subjectCode'
                     allQuestions = allQuestions.concat(subjectQuestions.map(q => ({
                         question: q,
-                        subject: Code
+                        subject: subjectCode  // ✅ CORRECT VARIABLE NAME
                     })));
                 }
             });
@@ -662,13 +663,7 @@ document.addEventListener('DOMContentLoaded', () => {
             
             localStorage.setItem('uploadResultMessage', "✅ Thank You! Your interview has been submitted successfully!");
             sessionStorage.setItem("fromDashboard", "true");
-
-
-            // Optional: trigger analysis
-            fetch("http://localhost:5000/analyze-drive", {
-                  method: "GET",
-                  mode: "no-cors"
-               }).catch(err => console.warn("Analyze-drive trigger failed:", err));
+            
             // ✅ QUICK REDIRECT
             setTimeout(() => {
                 window.location.replace("result.html");
@@ -1324,6 +1319,7 @@ document.addEventListener('DOMContentLoaded', () => {
 //         // Fetch data from Google Sheets when page loads
 //         fetchDataFromGoogleSheets();
 //     });
+
 
 
 
