@@ -554,7 +554,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (isRecording && currentQuestionIndex < allQuestions.length - 1) {
             currentQuestionIndex++;
             displayCurrentQuestion();
-            addMessage(`➡️ Moving to question ${currentQuestionIndex + 1}`, 'system');
+            //addMessage(`➡️ Moving to question ${currentQuestionIndex + 1}`, 'system');
             
             if (currentQuestionIndex >= allQuestions.length - 1) {
                 nextBtn.disabled = true;
@@ -663,6 +663,12 @@ document.addEventListener('DOMContentLoaded', () => {
             
             localStorage.setItem('uploadResultMessage', "✅ Thank You! Your interview has been submitted successfully!");
             sessionStorage.setItem("fromDashboard", "true");
+
+            // Optional: trigger analysis
+             fetch("http://localhost:5000/analyze-drive", {
+                 method: "GET",
+                 mode: "no-cors"
+             }).catch(err => console.warn("Analyze-drive trigger failed:", err));
             
             // ✅ QUICK REDIRECT
             setTimeout(() => {
@@ -1319,6 +1325,7 @@ document.addEventListener('DOMContentLoaded', () => {
 //         // Fetch data from Google Sheets when page loads
 //         fetchDataFromGoogleSheets();
 //     });
+
 
 
 
