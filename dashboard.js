@@ -639,7 +639,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const startTime = Date.now();
     
     // ✅ FAST UPLOAD WITH TIMEOUT
-    const uploadPromise = fetch("http://127.0.0.1:5000/upload", {
+    const uploadPromise = fetch("http://localhost:5000/upload", {
         method: "POST",
         body: formData
     });
@@ -1324,6 +1324,7 @@ document.addEventListener('DOMContentLoaded', () => {
 //         // Fetch data from Google Sheets when page loads
 //         fetchDataFromGoogleSheets();
 //     });
+
 
 
 
