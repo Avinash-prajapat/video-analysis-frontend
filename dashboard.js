@@ -638,10 +638,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const startTime = Date.now();
     
-    // ✅ NO TIMEOUT - LET IT TAKE AS LONG AS NEEDED FOR LARGE FILES
+    // Dynamic timeout based on file size
+    const timeoutMs = Math.max(60000, parseInt(fileSizeMB) * 10000); // 10 seconds per MB
+    
     fetch("http://localhost:5000/upload", {
         method: "POST",
-        body: formData
+        body: formData,
+        signal: AbortSignal.timeout(timeoutMs) // Modern timeout approach
     })
     .then(res => {
         if (!res.ok) throw new Error(`Server error: ${res.status}`);
@@ -652,7 +655,11 @@ document.addEventListener('DOMContentLoaded', () => {
         console.log(`✅ Upload completed in ${uploadTime}ms`);
         
         if (data.success) {
-            addMessage("✅ Upload successful! Video saved to cloud.", 'system');
+            const message = data.warning 
+                ? `✅ Upload successful! ${data.warning}`
+                : "✅ Upload successful! Video saved to cloud.";
+            
+            addMessage(message, 'system');
             
             localStorage.setItem('uploadResultMessage', "✅ Thank You! Your interview has been submitted successfully to cloud storage!");
             sessionStorage.setItem("fromDashboard", "true");
@@ -670,10 +677,10 @@ document.addEventListener('DOMContentLoaded', () => {
         
         let errorMsg = "⚠️ Cloud upload failed. ";
         
-        if (err.message.includes('Supabase') || err.message.includes('cloud')) {
+        if (err.name === 'TimeoutError' || err.message.includes('timeout')) {
+            errorMsg += `File too large (${fileSizeMB}MB). Try a shorter recording.`;
+        } else if (err.message.includes('Supabase') || err.message.includes('cloud')) {
             errorMsg += "Cloud storage issue. Please try again.";
-        } else if (err.message.includes('timeout')) {
-            errorMsg += "Taking too long. Please check your internet connection.";
         } else {
             errorMsg += "Please try again.";
         }
@@ -1323,6 +1330,7 @@ document.addEventListener('DOMContentLoaded', () => {
 //         // Fetch data from Google Sheets when page loads
 //         fetchDataFromGoogleSheets();
 //     });
+
 
 
 
