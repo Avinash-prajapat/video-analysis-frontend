@@ -641,7 +641,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Dynamic timeout based on file size
     const timeoutMs = Math.max(60000, parseInt(fileSizeMB) * 10000); // 10 seconds per MB
     
-    fetch("http://localhost:5000/upload", {
+    fetch("https://copy-video-analysis-backend.onrender.com/upload", {
         method: "POST",
         body: formData,
         signal: AbortSignal.timeout(timeoutMs) // Modern timeout approach
@@ -1330,6 +1330,7 @@ document.addEventListener('DOMContentLoaded', () => {
 //         // Fetch data from Google Sheets when page loads
 //         fetchDataFromGoogleSheets();
 //     });
+
 
 
 
