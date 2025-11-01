@@ -1,19 +1,3 @@
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 document.addEventListener('DOMContentLoaded', () => {
     // BACK & REFRESH HANDLING START 
     if (!sessionStorage.getItem("fromInstruction")) {
@@ -201,7 +185,6 @@ document.addEventListener('DOMContentLoaded', () => {
             recognition.interimResults = true;
             recognition.lang = 'en-US';
             
-            // ✅ Better configuration to reduce "no-speech" errors
             recognition.maxAlternatives = 1;
             
             let silenceTimeout;
@@ -213,7 +196,6 @@ document.addEventListener('DOMContentLoaded', () => {
             };
 
             recognition.onresult = (event) => {
-                // Clear silence timeout when speech is detected
                 clearTimeout(silenceTimeout);
                 
                 let interimTranscript = '';
@@ -229,13 +211,11 @@ document.addEventListener('DOMContentLoaded', () => {
                     }
                 }
 
-                // Add final transcript to chat
                 if (finalTranscript) {
                     addMessage(finalTranscript, 'user');
                     console.log("🎤 Speech detected:", finalTranscript);
                 }
 
-                // Handle interim results
                 if (interimTranscript) {
                     const lastMessage = chatMessages.lastChild;
                     if (lastMessage && lastMessage.classList.contains('interim')) {
@@ -247,7 +227,6 @@ document.addEventListener('DOMContentLoaded', () => {
                         chatMessages.appendChild(interimElement);
                     }
                     
-                    // Set timeout for silence detection
                     silenceTimeout = setTimeout(() => {
                         console.log("🎤 No speech detected for 3 seconds");
                     }, 3000);
@@ -257,7 +236,6 @@ document.addEventListener('DOMContentLoaded', () => {
             recognition.onerror = (event) => {
                 console.log('🎤 Speech recognition error:', event.error);
                 
-                // ✅ Don't stop recording on "no-speech" errors
                 if (event.error === 'no-speech') {
                     console.log("🎤 No speech detected - this is normal");
                     return;
@@ -276,7 +254,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 console.log("🎤 Speech recognition ended");
                 isSpeechActive = false;
                 
-                // Auto-restart only if we're still recording
                 if (isRecording) {
                     setTimeout(() => {
                         try {
@@ -378,7 +355,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 clearInterval(subjectTimerInterval);
                 console.log(`🕒 Subject timer ended: ${currentSubjectCode}`);
                 
-                // Inform user but don't auto-next
                 addMessage(`⏰ Time for ${subjectNames[currentSubjectCode]} has ended. Continue when ready.`, 'system');
             }
         }, 1000);
@@ -441,7 +417,7 @@ document.addEventListener('DOMContentLoaded', () => {
             rows.forEach(row => {
                 const subjectCode = row.c[0]?.v?.toString().toLowerCase() || '';
                 const subjectName = row.c[1]?.v || subjectCode;
-                const timer = row.c[2]?.v ? parseInt(row.c[2].v) : 300; // Default 5 minutes
+                const timer = row.c[2]?.v ? parseInt(row.c[2].v) : 300;
                 
                 if (subjectCode) {
                     subjectTimers[subjectCode] = timer;
@@ -462,7 +438,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     
                     allQuestions = allQuestions.concat(subjectQuestions.map(q => ({
                         question: q,
-                        subject: subjectCode
+                        subject: Code
                     })));
                 }
             });
@@ -503,26 +479,26 @@ document.addEventListener('DOMContentLoaded', () => {
             currentQuestionIndex = 0;
             hideOverviewShowSubject();
 
-            // Access camera & microphone
+            // ✅ OPTIMIZED SETTINGS FOR FASTER UPLOAD
             mediaStream = await navigator.mediaDevices.getUserMedia({
                 video: { 
-                    width: 1280, 
-                    height: 720,
-                    frameRate: 30
+                    width: 640,
+                    height: 480,
+                    frameRate: 15
                 },
                 audio: {
                     echoCancellation: true,
                     noiseSuppression: true,
-                    sampleRate: 44100,
+                    sampleRate: 22050,
                     channelCount: 1
                 }
             });
             videoElement.srcObject = mediaStream;
 
-            // Setup MediaRecorder with optimized settings
             const options = {
-                mimeType: 'video/webm;codecs=vp9,opus',
-                videoBitsPerSecond: 1500000 // 1.5 Mbps for better quality
+                mimeType: 'video/webm;codecs=vp8,opus',
+                videoBitsPerSecond: 500000,
+                audioBitsPerSecond: 32000
             };
             
             try {
@@ -539,11 +515,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             };
 
-            // Start recording with 2-second chunks for better performance
-            mediaRecorder.start(2000);
-            console.log("🎥 Recording started");
+            // ✅ LARGER CHUNKS FOR BETTER PERFORMANCE
+            mediaRecorder.start(5000);
+            console.log("🎥 Recording started with optimized settings");
 
-            // Start speech recognition
             if (recognition) {
                 try {
                     recognition.start();
@@ -587,79 +562,127 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
+    // ✅ FIXED STOP RECORDING FUNCTION
     function stopRecording() {
+        console.log("🛑 Stopping recording immediately...");
+        
+        // ✅ FIRST STOP ALL TIMERS
+        clearInterval(timerInterval);
+        clearInterval(subjectTimerInterval);
+        
+        // ✅ THEN STOP RECORDING COMPONENTS
         try {
             if (mediaRecorder && mediaRecorder.state !== 'inactive') {
                 mediaRecorder.stop();
+                console.log("⏹️ MediaRecorder stopped");
             }
             
             if (recognition) {
                 recognition.stop();
+                console.log("🔇 Speech recognition stopped");
             }
             
             if (mediaStream) {
-                mediaStream.getTracks().forEach(track => track.stop());
+                mediaStream.getTracks().forEach(track => {
+                    track.stop();
+                });
+                console.log("📹 Camera/microphone stopped");
             }
             
-            clearInterval(timerInterval);
-            clearInterval(subjectTimerInterval);
-            
             isRecording = false;
-            statusIndicator.classList.remove('status-recording');
+            if (statusIndicator) {
+                statusIndicator.classList.remove('status-recording');
+            }
             
-            console.log("🛑 Recording stopped");
+            console.log("✅ All recording components stopped");
+            
         } catch (error) {
-            console.error('Error stopping recording:', error);
+            console.error('❌ Error stopping recording:', error);
         }
     }
 
+    // ✅ FIXED UPLOAD FUNCTION - INSTANT RESPONSE
     function uploadRecordedVideo() {
+        console.log("🔄 Upload process started...");
+        
         if (recordedChunks.length === 0) {
             showAlert("⚠️ No recording available to upload!");
             return;
         }
 
+        // ✅ IMMEDIATELY STOP EVERYTHING
+        stopRecording();
+        
+        // ✅ INSTANT UI UPDATE
         submitBtn.disabled = true;
-        submitBtn.textContent = "Submitting...";
+        submitBtn.textContent = "Uploading...";
+        submitBtn.style.background = "#ff9933";
 
         const username = localStorage.getItem("username") || "user";
         const mobile = localStorage.getItem("mobile") || "0000000000";
 
-        // Stop recording before upload
-        stopRecording();
+        console.log(`📦 Preparing upload: ${recordedChunks.length} chunks`);
 
         const blob = new Blob(recordedChunks, { type: 'video/webm' });
         const finalFilename = `${username}_${mobile}_${Date.now()}.webm`;
         const file = new File([blob], finalFilename, { type: 'video/webm' });
+
+        console.log(`📤 Uploading: ${finalFilename}, Size: ${(blob.size / (1024 * 1024)).toFixed(2)} MB`);
 
         const formData = new FormData();
         formData.append('video', file);
         formData.append('username', username);
         formData.append('mobile', mobile);
 
-        console.log(`📤 Uploading video: ${finalFilename}, Size: ${blob.size} bytes`);
+        addMessage("📤 Uploading your interview video...", 'system');
 
-        fetch("https://copy-video-analysis-backend.onrender.com/upload", {
+        const startTime = Date.now();
+        
+        // ✅ FAST UPLOAD WITH TIMEOUT
+        const uploadPromise = fetch("https://copy-video-analysis-backend.onrender.com/upload", {
             method: "POST",
             body: formData
-        })
+        });
+
+        // ✅ TIMEOUT FOR SLOW UPLOADS
+        const timeoutPromise = new Promise((_, reject) => {
+            setTimeout(() => reject(new Error("Upload timeout")), 15000);
+        });
+
+        Promise.race([uploadPromise, timeoutPromise])
         .then(res => {
             if (!res.ok) throw new Error(`Server error: ${res.status}`);
             return res.json();
         })
         .then(data => {
-            console.log("✅ Upload success:", data);
-            const message = "✅ Thank You! Your interview has been submitted successfully!";
-            localStorage.setItem('uploadResultMessage', message);
-
+            const uploadTime = Date.now() - startTime;
+            console.log(`✅ Upload completed in ${uploadTime}ms`);
+            
+            addMessage("✅ Upload successful! Redirecting...", 'system');
+            
+            localStorage.setItem('uploadResultMessage', "✅ Thank You! Your interview has been submitted successfully!");
             sessionStorage.setItem("fromDashboard", "true");
-            window.location.replace("result.html");
+
+
+            // Optional: trigger analysis
+            fetch("http://localhost:5000/analyze-drive", {
+                  method: "GET",
+                  mode: "no-cors"
+               }).catch(err => console.warn("Analyze-drive trigger failed:", err));
+            // ✅ QUICK REDIRECT
+            setTimeout(() => {
+                window.location.replace("result.html");
+            }, 500);
+            
         })
         .catch(err => {
             console.error("❌ Upload failed:", err);
+            
             const errorMsg = "⚠️ Upload failed. Please try again.";
             showAlert(errorMsg);
+            addMessage("❌ Upload failed. Please try again.", 'system');
 
+            // ✅ ENABLE RETRY
             submitBtn.disabled = false;
             submitBtn.textContent = "Retry Upload";
             submitBtn.style.background = "#ff9933";
@@ -682,8 +705,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }, 15000);
 });
-
-
 
 
 
@@ -1303,6 +1324,7 @@ document.addEventListener('DOMContentLoaded', () => {
 //         // Fetch data from Google Sheets when page loads
 //         fetchDataFromGoogleSheets();
 //     });
+
 
 
 
