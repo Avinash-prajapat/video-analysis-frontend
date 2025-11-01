@@ -602,93 +602,92 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // ✅ FIXED UPLOAD FUNCTION - INSTANT RESPONSE
     function uploadRecordedVideo() {
-        console.log("🔄 Upload process started...");
-        
-        if (recordedChunks.length === 0) {
-            showAlert("⚠️ No recording available to upload!");
-            return;
-        }
-
-        // ✅ IMMEDIATELY STOP EVERYTHING
-        stopRecording();
-        
-        // ✅ INSTANT UI UPDATE
-        submitBtn.disabled = true;
-        submitBtn.textContent = "Uploading...";
-        submitBtn.style.background = "#ff9933";
-
-        const username = localStorage.getItem("username") || "user";
-        const mobile = localStorage.getItem("mobile") || "0000000000";
-
-        console.log(`📦 Preparing upload: ${recordedChunks.length} chunks`);
-
-        const blob = new Blob(recordedChunks, { type: 'video/webm' });
-        const finalFilename = `${username}_${mobile}_${Date.now()}.webm`;
-        const file = new File([blob], finalFilename, { type: 'video/webm' });
-
-        console.log(`📤 Uploading: ${finalFilename}, Size: ${(blob.size / (1024 * 1024)).toFixed(2)} MB`);
-
-        const formData = new FormData();
-        formData.append('video', file);
-        formData.append('username', username);
-        formData.append('mobile', mobile);
-
-        addMessage("📤 Uploading your interview video...", 'system');
-
-        const startTime = Date.now();
-        
-        // ✅ FAST UPLOAD WITH TIMEOUT
-        const uploadPromise = fetch("https://copy-video-analysis-backend.onrender.com/upload", {
-            method: "POST",
-            body: formData
-        });
-
-        // ✅ TIMEOUT FOR SLOW UPLOADS
-        const timeoutPromise = new Promise((_, reject) => {
-            setTimeout(() => reject(new Error("Upload timeout")), 15000);
-        });
-
-        Promise.race([uploadPromise, timeoutPromise])
-        .then(res => {
-            if (!res.ok) throw new Error(`Server error: ${res.status}`);
-            return res.json();
-        })
-        .then(data => {
-            const uploadTime = Date.now() - startTime;
-            console.log(`✅ Upload completed in ${uploadTime}ms`);
-            
-            addMessage("✅ Upload successful! Redirecting...", 'system');
-            
-            localStorage.setItem('uploadResultMessage', "✅ Thank You! Your interview has been submitted successfully!");
-            sessionStorage.setItem("fromDashboard", "true");
-
-            // Optional: trigger analysis
-             fetch("http://localhost:5000/analyze-drive", {
-                 method: "GET",
-                 mode: "no-cors"
-             }).catch(err => console.warn("Analyze-drive trigger failed:", err));
-            
-            // ✅ QUICK REDIRECT
-            setTimeout(() => {
-                window.location.replace("result.html");
-            }, 500);
-            
-        })
-        .catch(err => {
-            console.error("❌ Upload failed:", err);
-            
-            const errorMsg = "⚠️ Upload failed. Please try again.";
-            showAlert(errorMsg);
-            addMessage("❌ Upload failed. Please try again.", 'system');
-
-            // ✅ ENABLE RETRY
-            submitBtn.disabled = false;
-            submitBtn.textContent = "Retry Upload";
-            submitBtn.style.background = "#ff9933";
-        });
+    console.log("🔄 Upload process started...");
+    
+    if (recordedChunks.length === 0) {
+        showAlert("⚠️ No recording available to upload!");
+        return;
     }
+
+    // ✅ IMMEDIATELY STOP EVERYTHING
+    stopRecording();
+    
+    // ✅ INSTANT UI UPDATE
+    submitBtn.disabled = true;
+    submitBtn.textContent = "Uploading...";
+    submitBtn.style.background = "#ff9933";
+
+    const username = localStorage.getItem("username") || "user";
+    const mobile = localStorage.getItem("mobile") || "0000000000";
+
+    console.log(`📦 Preparing upload: ${recordedChunks.length} chunks`);
+
+    const blob = new Blob(recordedChunks, { type: 'video/webm' });
+    const finalFilename = `${username}_${mobile}_${Date.now()}.webm`;
+    const file = new File([blob], finalFilename, { type: 'video/webm' });
+
+    console.log(`📤 Uploading: ${finalFilename}, Size: ${(blob.size / (1024 * 1024)).toFixed(2)} MB`);
+
+    const formData = new FormData();
+    formData.append('video', file);
+    formData.append('username', username);
+    formData.append('mobile', mobile);
+
+    addMessage("📤 Uploading your interview video...", 'system');
+
+    const startTime = Date.now();
+    
+    // ✅ FAST UPLOAD WITH TIMEOUT
+    const uploadPromise = fetch("https://copy-video-analysis-backend.onrender.com/upload", {
+        method: "POST",
+        body: formData
+    });
+
+    // ✅ TIMEOUT FOR SLOW UPLOADS
+    const timeoutPromise = new Promise((_, reject) => {
+        setTimeout(() => reject(new Error("Upload timeout")), 15000);
+    });
+
+    Promise.race([uploadPromise, timeoutPromise])
+    .then(res => {
+        if (!res.ok) throw new Error(`Server error: ${res.status}`);
+        return res.json();
+    })
+    .then(data => {
+        const uploadTime = Date.now() - startTime;
+        console.log(`✅ Upload completed in ${uploadTime}ms`);
+        
+        addMessage("✅ Upload successful! Redirecting...", 'system');
+        
+        localStorage.setItem('uploadResultMessage', "✅ Thank You! Your interview has been submitted successfully!");
+        sessionStorage.setItem("fromDashboard", "true");
+
+        // Optional: trigger analysis
+         fetch("http://localhost:5000/analyze-drive", {
+             method: "GET",
+             mode: "no-cors"
+         }).catch(err => console.warn("Analyze-drive trigger failed:", err));
+        
+        // ✅ QUICK REDIRECT
+        setTimeout(() => {
+            window.location.replace("result.html");
+        }, 500);
+        
+    })
+    .catch(err => {
+        console.error("❌ Upload failed:", err);
+        
+        const errorMsg = "⚠️ Upload failed. Please try again.";
+        showAlert(errorMsg);
+        addMessage("❌ Upload failed. Please try again.", 'system');
+
+        // ✅ ENABLE RETRY
+        submitBtn.disabled = false;
+        submitBtn.textContent = "Retry Upload";
+        submitBtn.style.background = "#ff9933";
+    });
+}
 
     // Event listeners
     startBtn.addEventListener('click', startRecording);
@@ -1325,6 +1324,7 @@ document.addEventListener('DOMContentLoaded', () => {
 //         // Fetch data from Google Sheets when page loads
 //         fetchDataFromGoogleSheets();
 //     });
+
 
 
 
