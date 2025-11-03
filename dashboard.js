@@ -482,11 +482,21 @@ document.addEventListener('DOMContentLoaded', () => {
 
             // ✅ OPTIMIZED SETTINGS FOR FASTER UPLOAD
             mediaStream = await navigator.mediaDevices.getUserMedia({
+                // video: { 
+                //     width: 640,
+                //     height: 480,
+                //     frameRate: 15
+                // },
                 video: { 
-                    width: 640,
-                    height: 480,
-                    frameRate: 15
-                },
+                // Reduced resolution
+                width: { ideal: 480 },    // 480p instead of 720p/1080p
+                height: { ideal: 360 },
+                frameRate: { ideal: 12, max: 15 },  // Lower frame rate
+                
+                // Advanced settings for lower bandwidth
+                aspectRatio: 1.333,
+                resizeMode: 'crop-and-scale'
+            },
                 audio: {
                     echoCancellation: true,
                     noiseSuppression: true,
@@ -498,7 +508,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             const options = {
                 mimeType: 'video/webm;codecs=vp8,opus',
-                videoBitsPerSecond: 500000,
+                videoBitsPerSecond: 250000,
                 audioBitsPerSecond: 32000
             };
             
