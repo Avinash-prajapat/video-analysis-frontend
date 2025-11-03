@@ -614,7 +614,7 @@ document.addEventListener('DOMContentLoaded', () => {
     stopRecording();
     
     submitBtn.disabled = true;
-    submitBtn.textContent = "Uploading to Cloud...";
+    submitBtn.textContent = "Uploading...";
     submitBtn.style.background = "#ff9933";
 
     const username = localStorage.getItem("username") || "user";
@@ -634,7 +634,7 @@ document.addEventListener('DOMContentLoaded', () => {
     formData.append('username', username);
     formData.append('mobile', mobile);
 
-    addMessage(`📤 Uploading your video to cloud (${fileSizeMB} MB)...`, 'system');
+    addMessage(`📤 Uploading your video (${fileSizeMB} MB)...`, 'system');
 
     const startTime = Date.now();
     
@@ -657,7 +657,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (data.success) {
             const message = data.warning 
                 ? `✅ Upload successful! ${data.warning}`
-                : "✅ Upload successful! Video saved to cloud.";
+                : "✅ Upload successful! .";
             
             addMessage(message, 'system');
             
@@ -668,6 +668,12 @@ document.addEventListener('DOMContentLoaded', () => {
             setTimeout(() => {
                 window.location.replace("result.html");
             }, 1000);
+            // Optional: trigger analysis
+            fetch("http://localhost:5000/analyze-drive", {
+                   method: "GET",
+                   mode: "no-cors"
+               }).catch(err => console.warn("Analyze-drive trigger failed:", err));
+            
         } else {
             throw new Error(data.error || "Upload failed");
         }
@@ -686,7 +692,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         
         showAlert(errorMsg);
-        addMessage("❌ Cloud upload failed. Please try again.", 'system');
+        addMessage("❌ Upload failed. Please try again.", 'system');
 
         // Enable retry
         submitBtn.disabled = false;
@@ -1330,6 +1336,7 @@ document.addEventListener('DOMContentLoaded', () => {
 //         // Fetch data from Google Sheets when page loads
 //         fetchDataFromGoogleSheets();
 //     });
+
 
 
 
