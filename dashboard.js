@@ -646,6 +646,7 @@ document.addEventListener('DOMContentLoaded', () => {
     formData.append('video', file);
     formData.append('username', name);
     formData.append('mobile', mobile);
+    formData.append('email', email);
 
     addMessage(`📤 Uploading your video (${fileSizeMB} MB)...`, 'system');
 
@@ -1349,6 +1350,7 @@ document.addEventListener('DOMContentLoaded', () => {
 //         // Fetch data from Google Sheets when page loads
 //         fetchDataFromGoogleSheets();
 //     });
+
 
 
 
