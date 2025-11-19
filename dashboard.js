@@ -568,7 +568,7 @@ document.addEventListener('DOMContentLoaded', () => {
             displayCurrentQuestion();
             //addMessage(`➡️ Moving to question ${currentQuestionIndex + 1}`, 'system');
             
-            if (currentQuestionIndex >= allQuestions.length - 1) {
+            if (currentQuestionIndex >= allQuestions.length) {
                 nextBtn.disabled = true;
                 submitBtn.disabled = false;
             }
@@ -1348,6 +1348,7 @@ document.addEventListener('DOMContentLoaded', () => {
 //         // Fetch data from Google Sheets when page loads
 //         fetchDataFromGoogleSheets();
 //     });
+
 
 
 
