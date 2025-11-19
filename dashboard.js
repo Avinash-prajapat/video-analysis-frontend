@@ -287,50 +287,95 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    // function displayCurrentQuestion() {
+    //     if (currentQuestionIndex < allQuestions.length) {
+    //         const currentQ = allQuestions[currentQuestionIndex];
+    //         const subjectName = subjectNames[currentQ.subject] || currentQ.subject;
+    //         const questionText = `Subject: ${subjectName} - Question ${currentQuestionIndex + 1}: ${currentQ.question}`;
+    //         currentQuestion.textContent = questionText;
+            
+    //         if (currentSubjectCode !== currentQ.subject) {
+    //             currentSubjectCode = currentQ.subject;
+    //             currentSubjectTime = subjectTimers[currentSubjectCode] || 300;
+    //             subjectStartTime = Date.now();
+                
+    //             displayCurrentSubject(currentSubjectCode);
+    //             startSubjectTimer();
+    //         }
+            
+    //         document.querySelectorAll('.question-item').forEach(item => {
+    //             item.classList.remove('current', 'completed');
+    //         });
+            
+    //         const subjectQuestions = questionBank[currentSubjectCode];
+    //         const subjectQuestionIndex = subjectQuestions.indexOf(currentQ.question);
+            
+    //         if (subjectQuestionIndex >= 0) {
+    //             const currentQuestionElement = document.getElementById(`question-${currentSubjectCode}-${subjectQuestionIndex}`);
+    //             if (currentQuestionElement) {
+    //                 currentQuestionElement.classList.add('current');
+    //             }
+                
+    //             for (let i = 0; i < subjectQuestionIndex; i++) {
+    //                 const prevQuestionElement = document.getElementById(`question-${currentSubjectCode}-${i}`);
+    //                 if (prevQuestionElement) {
+    //                     prevQuestionElement.classList.add('completed');
+    //                 }
+    //             }
+    //         }
+    //     } else {
+    //         currentQuestion.textContent = "All questions completed. Ready to submit.";
+    //         nextBtn.disabled = true;
+    //         submitBtn.disabled = false;
+    //         clearInterval(subjectTimerInterval);
+    //         addMessage("✅ All questions completed! Click Submit to upload your interview.", 'system');
+    //     }
+    // }
+
+    // Display current question
     function displayCurrentQuestion() {
-        if (currentQuestionIndex < allQuestions.length) {
-            const currentQ = allQuestions[currentQuestionIndex];
-            const subjectName = subjectNames[currentQ.subject] || currentQ.subject;
-            const questionText = `Subject: ${subjectName} - Question ${currentQuestionIndex + 1}: ${currentQ.question}`;
-            currentQuestion.textContent = questionText;
-            
-            if (currentSubjectCode !== currentQ.subject) {
-                currentSubjectCode = currentQ.subject;
-                currentSubjectTime = subjectTimers[currentSubjectCode] || 300;
-                subjectStartTime = Date.now();
-                
-                displayCurrentSubject(currentSubjectCode);
-                startSubjectTimer();
-            }
-            
-            document.querySelectorAll('.question-item').forEach(item => {
-                item.classList.remove('current', 'completed');
-            });
-            
-            const subjectQuestions = questionBank[currentSubjectCode];
-            const subjectQuestionIndex = subjectQuestions.indexOf(currentQ.question);
-            
-            if (subjectQuestionIndex >= 0) {
-                const currentQuestionElement = document.getElementById(`question-${currentSubjectCode}-${subjectQuestionIndex}`);
-                if (currentQuestionElement) {
-                    currentQuestionElement.classList.add('current');
-                }
-                
-                for (let i = 0; i < subjectQuestionIndex; i++) {
-                    const prevQuestionElement = document.getElementById(`question-${currentSubjectCode}-${i}`);
-                    if (prevQuestionElement) {
-                        prevQuestionElement.classList.add('completed');
-                    }
-                }
-            }
-        } else {
-            currentQuestion.textContent = "All questions completed. Ready to submit.";
-            nextBtn.disabled = true;
-            submitBtn.disabled = false;
-            clearInterval(subjectTimerInterval);
-            addMessage("✅ All questions completed! Click Submit to upload your interview.", 'system');
-        }
-    }
+           if (currentQuestionIndex < allQuestions.length) {
+               const currentQ = allQuestions[currentQuestionIndex];
+               const subjectName = subjectNames[currentQ.subject] || currentQ.subject;
+               const questionText = `Subject: ${subjectName} - Question ${currentQuestionIndex + 1}: ${currentQ.question}`;
+               currentQuestion.textContent = questionText;
+               
+               if (currentSubjectCode !== currentQ.subject) {
+                   currentSubjectCode = currentQ.subject;
+                   currentSubjectTime = subjectTimers[currentSubjectCode] || 60;
+                   subjectStartTime = Date.now();
+                   
+                   displayCurrentSubject(currentSubjectCode);
+                   startSubjectTimer();
+               }
+               
+               document.querySelectorAll('.question-item').forEach(item => {
+                   item.classList.remove('current', 'completed');
+               });
+               
+               const subjectQuestions = questionBank[currentSubjectCode];
+               const subjectQuestionIndex = subjectQuestions.indexOf(currentQ.question);
+               
+               if (subjectQuestionIndex >= 0) {
+                   const currentQuestionElement = document.getElementById(`question-${currentSubjectCode}-${subjectQuestionIndex}`);
+                   if (currentQuestionElement) {
+                       currentQuestionElement.classList.add('current');
+                   }
+                   
+                   for (let i = 0; i < subjectQuestionIndex; i++) {
+                       const prevQuestionElement = document.getElementById(`question-${currentSubjectCode}-${i}`);
+                       if (prevQuestionElement) {
+                           prevQuestionElement.classList.add('completed');
+                       }
+                   }
+               }
+           } else {
+               currentQuestion.textContent = "All questions completed. Ready to submit.";
+               nextBtn.disabled = true;
+               submitBtn.disabled = false;
+               clearInterval(subjectTimerInterval);
+           }
+       }
 
     function startSubjectTimer() {
         clearInterval(subjectTimerInterval);
@@ -1346,6 +1391,7 @@ document.addEventListener('DOMContentLoaded', () => {
 //         // Fetch data from Google Sheets when page loads
 //         fetchDataFromGoogleSheets();
 //     });
+
 
 
 
