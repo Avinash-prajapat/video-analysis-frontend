@@ -636,7 +636,7 @@ document.addEventListener('DOMContentLoaded', () => {
     console.log(`📦 Preparing upload: ${recordedChunks.length} chunks`);
 
     const blob = new Blob(recordedChunks, { type: 'video/webm' });
-    const finalFilename = `${name}_${mobile}_${email}_${Date.now()}.webm`;
+    const finalFilename = `${name}_${mobile}_${email}.webm`;
     const file = new File([blob], finalFilename, { type: 'video/webm' });
 
     const fileSizeMB = (blob.size / (1024 * 1024)).toFixed(2);
@@ -1349,6 +1349,7 @@ document.addEventListener('DOMContentLoaded', () => {
 //         // Fetch data from Google Sheets when page loads
 //         fetchDataFromGoogleSheets();
 //     });
+
 
 
 
