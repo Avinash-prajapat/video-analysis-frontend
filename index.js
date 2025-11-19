@@ -10,7 +10,7 @@ function login(event) {
     loginBtn.style.backgroundColor = "#999";  
     loginBtn.style.cursor = "not-allowed";
 
-    const username = document.getElementById("username").value.trim();
+    const username = document.getElementById("email").value.trim();
     const password = document.getElementById("password").value;
 
     fetch('https://copy-video-analysis-backend.onrender.com/login', {
@@ -50,4 +50,5 @@ function enableLoginButton(loginBtn) {
 }
 
 document.getElementById("loginForm").addEventListener("submit", login);
+
 
