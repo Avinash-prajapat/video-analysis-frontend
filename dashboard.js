@@ -563,7 +563,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function nextQuestion() {
-        if (isRecording && currentQuestionIndex < allQuestions.length - 1) {
+        if (isRecording && currentQuestionIndex < allQuestions.length) {
             currentQuestionIndex++;
             displayCurrentQuestion();
             //addMessage(`➡️ Moving to question ${currentQuestionIndex + 1}`, 'system');
@@ -715,7 +715,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Event listeners
     startBtn.addEventListener('click', startRecording);
-    nextBtn.addEventListener('click', nextQuestion++);
+    nextBtn.addEventListener('click', nextQuestion);
     submitBtn.addEventListener('click', uploadRecordedVideo);
 
     // Initialize
@@ -1348,6 +1348,7 @@ document.addEventListener('DOMContentLoaded', () => {
 //         // Fetch data from Google Sheets when page loads
 //         fetchDataFromGoogleSheets();
 //     });
+
 
 
 
