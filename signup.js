@@ -64,20 +64,22 @@
 // });
 
 // Listen for the signup form submission
-document.getElementById('signupForm').addEventListener('submit', function(e) {
-    e.preventDefault(); // Prevent the page from reloading when form is submitted
 
-    // Get input values from the form
+
+// Listen for the signup form submission
+document.getElementById('signupForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+
+    // Get values
     const name = document.getElementById('name').value.trim();
     const mobile = document.getElementById('mobile').value.trim();
     const username = document.getElementById('username').value.trim();
     const password = document.getElementById('password').value;
     const msg = document.getElementById('message');
     
-    // Clear previous messages
     msg.innerText = '';
 
-    // Basic validation
+    // Validation
     if (!name || !mobile || !username || !password) {
         msg.style.color = 'red';
         msg.innerText = '❌ All fields are required';
@@ -96,20 +98,19 @@ document.getElementById('signupForm').addEventListener('submit', function(e) {
         return;
     }
 
-    // Get the signup button
+    // Get signup button
     const signupBtn = document.getElementById("signupBtn");
 
-    // Disable the button to stop multiple clicks - with spinner
+    // Disable button
     signupBtn.disabled = true;
     signupBtn.innerHTML = '<span class="spinner"></span> Signing up...';
     signupBtn.style.backgroundColor = "#999";
     signupBtn.style.cursor = "not-allowed";
 
-    // Add timeout to prevent infinite loading
     const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 10000); // 10 second timeout
+    const timeoutId = setTimeout(() => controller.abort(), 10000);
 
-    // Send signup data to the backend (API call)
+    // API call
     fetch('https://copy-video-analysis-backend.onrender.com/signup', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -118,33 +119,28 @@ document.getElementById('signupForm').addEventListener('submit', function(e) {
     })
     .then(res => {
         clearTimeout(timeoutId);
-        if (!res.ok) {
-            throw new Error(`HTTP error! status: ${res.status}`);
-        }
+        if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
         return res.json();
     })
     .then(data => {
         if (data.success) {
-            // If signup is successful
+            // Success
             msg.style.color = 'green';
             msg.innerHTML = '✅ ' + (data.message || 'Signup successful!');
             
-            // Show success state on button
-            signupBtn.innerHTML = '✓ Success!';
+            // Success button state
+            signupBtn.innerHTML = '✓ Success! Redirecting...';
             signupBtn.style.backgroundColor = "#4CAF50";
             
-            // Optional: Save something to localStorage if needed
-            localStorage.setItem("signup_email", username);
-            
-            // Redirect to login page after 1.5 seconds
+            // Redirect to login
             setTimeout(() => { 
                 window.location.href = "index.html";
             }, 1500);
         } else {
-            // If signup failed
+            // Failed
             msg.style.color = 'red';
             msg.innerHTML = '❌ ' + (data.message || 'Signup failed');
-            enableSignupButton(signupBtn);
+            resetSignupButton(signupBtn);  // ✅ RESET BUTTON
         }
     })
     .catch(err => {
@@ -157,78 +153,39 @@ document.getElementById('signupForm').addEventListener('submit', function(e) {
             msg.innerHTML = '⚠️ Server error. Please try again.';
         }
         msg.style.color = 'red';
-        enableSignupButton(signupBtn);
+        resetSignupButton(signupBtn);  // ✅ RESET BUTTON
     });
 });
 
-// Function to enable/reset the button back to normal
-function enableSignupButton(signupBtn) {
-    signupBtn.disabled = false;
-    signupBtn.innerHTML = 'Signup';  // Fixed: was "Login", now "Signup"
-    signupBtn.style.backgroundColor = "#128C7E";
-    signupBtn.style.cursor = "pointer";
+// ✅ Function to reset signup button
+function resetSignupButton(btn) {
+    btn.disabled = false;
+    btn.innerHTML = 'Signup';
+    btn.style.backgroundColor = "#128C7E";
+    btn.style.cursor = "pointer";
 }
 
 // Toggle Password Visibility
 document.getElementById('togglePassword').addEventListener('click', function() {
     const passwordField = document.getElementById('password');
-    const toggleIcon = this.querySelector('i') || this;
-    
     if (passwordField.type === 'password') {
         passwordField.type = 'text';
-        this.innerHTML = '<i class="fas fa-eye-slash"></i> Hide'; // Agar FontAwesome use kar rahe hain
-        this.classList.add('active');
+        this.innerHTML = '<i class="fas fa-eye-slash"></i> Hide';
     } else {
         passwordField.type = 'password';
         this.innerHTML = '<i class="fas fa-eye"></i> Show';
-        this.classList.remove('active');
     }
 });
 
-// Mobile number validation - only numbers
+// Mobile number validation
 document.getElementById('mobile').addEventListener('input', function(e) {
     this.value = this.value.replace(/[^0-9]/g, '');
 });
 
-// Real-time password strength indicator (optional)
-document.getElementById('password').addEventListener('input', function() {
-    const password = this.value;
-    let strength = 0;
-    
-    if (password.length >= 8) strength++;
-    if (password.match(/[a-z]+/)) strength++;
-    if (password.match(/[A-Z]+/)) strength++;
-    if (password.match(/[0-9]+/)) strength++;
-    if (password.match(/[$@#&!]+/)) strength++;
-    
-    const strengthBar = document.getElementById('passwordStrength');
-    if (strengthBar) {
-        let strengthText = '';
-        let color = '';
-        
-        if (password.length < 6) {
-            strengthText = 'Too short';
-            color = 'red';
-        } else if (strength < 3) {
-            strengthText = 'Weak';
-            color = 'orange';
-        } else if (strength < 5) {
-            strengthText = 'Good';
-            color = '#4CAF50';
-        } else {
-            strengthText = 'Strong';
-            color = '#128C7E';
-        }
-        
-        strengthBar.innerText = strengthText;
-        strengthBar.style.color = color;
-    }
-});
-
-// Add spinner CSS if not already present
-if (!document.querySelector('#signup-spinner-style')) {
+// Add spinner CSS
+if (!document.querySelector('#auth-spinner-style')) {
     const style = document.createElement('style');
-    style.id = 'signup-spinner-style';
+    style.id = 'auth-spinner-style';
     style.textContent = `
         .spinner {
             display: inline-block;
@@ -248,7 +205,3 @@ if (!document.querySelector('#signup-spinner-style')) {
     `;
     document.head.appendChild(style);
 }
-
-// Remove any existing listeners and add fresh one to prevent duplicates
-const signupForm = document.getElementById('signupForm');
-signupForm.removeEventListener('submit', signupForm.submit);
