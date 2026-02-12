@@ -67,10 +67,19 @@ This app begins with a secure **Login Page** for authentication.
 
 ## 📸 Preview
 ## Login Page
-![App Screenshot](loginpage.png)
+![App Screenshot](login_page.png)
+
+## Signup Page
+![App Screenshot](signup_page.png)
+
+## Instructions Page
+![App Screenshot](instructions_page.png)
 
 ## Main Page
-![App Screenshot](mainpage.png) <!-- You can replace this with your actual screenshot or GIF -->
+![App Screenshot](dashboard_page.png) <!-- You can replace this with your actual screenshot or GIF -->
+
+## Instructions Page
+![App Screenshot](submission_page.png)
 
 ---
 
